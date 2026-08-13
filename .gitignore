@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Node (only used for the test harness)
+node_modules/
+
+# Reviewer output — completed CSVs must not be committed
+*_review_completed.csv

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Annotation Review</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <span class="topbar-title">Annotation Review</span>
+  <button type="button" id="btn-instructions" class="link-button">Review instructions</button>
+</header>
+
+<main id="main">
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="view-landing" class="view">
+    <h1>Annotation Review</h1>
+    <p class="lede">Please select your reviewer ID to begin.</p>
+    <div class="choice-row">
+      <button type="button" class="big-button" data-reviewer="reviewer1">Reviewer 1</button>
+      <button type="button" class="big-button" data-reviewer="reviewer2">Reviewer 2</button>
+    </div>
+    <p class="footnote">
+      Please complete your review independently, and do not discuss individual
+      images with the other reviewer until you have both finished.
+    </p>
+    <div class="reset-zone">
+      <button type="button" id="btn-reset" class="link-button danger">Reset saved progress</button>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="view-brief" class="view" hidden>
+    <h1 id="brief-reviewer">Reviewer 1</h1>
+    <p class="stat"><strong id="brief-count">53</strong> images assigned</p>
+
+    <div id="brief-progress" class="notice" hidden>
+      <p><strong id="brief-progress-text">0 / 53 completed</strong></p>
+      <p class="small">Saved progress was found in this browser. You can continue where you left off.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Before you start</h2>
+      <p>
+        For each image, decide whether the <strong>existing annotation</strong> is
+        correct for the six target classes below. Other classes may appear in an
+        image; you do not need to review them.
+      </p>
+      <h3>Target classes</h3>
+      <ul class="class-list">
+        <li>RedOnion_Raw</li>
+        <li>Yam_Raw</li>
+        <li>Tomato_Raw</li>
+        <li>Papaya</li>
+        <li>Potato_Raw</li>
+        <li>Lemon</li>
+      </ul>
+      <p class="small">
+        Your time on each image is measured automatically. Use
+        <strong>Pause</strong> whenever you step away. Once you press
+        <strong>Next</strong>, an image is final — you cannot return to it.
+        Full details are in the <button type="button" class="link-button inline" data-goto-instructions>review instructions</button>.
+      </p>
+    </div>
+
+    <div class="button-row">
+      <button type="button" id="btn-start" class="primary-button">Start Review</button>
+      <button type="button" id="btn-back-landing" class="link-button">Choose a different reviewer</button>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="view-review" class="view" hidden>
+    <div class="review-header">
+      <span class="task-counter" id="task-counter">Task 1 / 53</span>
+      <span class="spacer"></span>
+      <span class="timer" id="timer" aria-live="off">Time: 00:00</span>
+      <button type="button" id="btn-pause" class="secondary-button">Pause</button>
+    </div>
+
+    <div class="image-frame">
+      <img id="review-image" alt="Image under review" />
+    </div>
+    <p class="small image-hint">Click the image to open it at full size.</p>
+
+    <form id="answer-form" novalidate>
+      <fieldset class="question">
+        <legend>Annotation defect found?</legend>
+        <div class="choice-row" role="radiogroup" aria-label="Annotation defect found?">
+          <button type="button" class="choice-button" data-answer="NO">NO</button>
+          <button type="button" class="choice-button" data-answer="YES">YES</button>
+          <button type="button" class="choice-button" data-answer="AMBIGUOUS">AMBIGUOUS</button>
+        </div>
+      </fieldset>
+
+      <div id="yes-fields" hidden>
+        <fieldset>
+          <legend>Defect type <span class="req">(select at least one)</span></legend>
+          <div class="checkbox-grid" id="defect-types"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Affected target class <span class="req">(select at least one)</span></legend>
+          <div class="checkbox-grid" id="target-classes"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Number of defects <span class="req">(1 or more)</span></legend>
+          <input type="number" id="defect-count" min="1" step="1" value="1" class="number-input">
+        </fieldset>
+      </div>
+
+      <div id="ambiguous-hint" class="notice" hidden>
+        <p class="small">
+          Please describe briefly in the notes what made this image hard to
+          judge. This is recommended, but not required.
+        </p>
+      </div>
+
+      <fieldset>
+        <legend>Notes <span class="optional">(optional)</span></legend>
+        <textarea id="notes" rows="3" placeholder="Anything worth explaining."></textarea>
+      </fieldset>
+
+      <p id="validation-message" class="validation" role="alert" hidden></p>
+
+      <div class="button-row">
+        <button type="submit" id="btn-next" class="primary-button">Next</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="view-complete" class="view" hidden>
+    <h1>Review Complete</h1>
+    <p class="stat"><strong id="complete-count">53 / 53</strong> completed</p>
+    <p class="stat">Total active review time: <strong id="complete-time">0 min 00 sec</strong></p>
+    <p>Thank you for completing the review.</p>
+    <div class="button-row">
+      <button type="button" id="btn-download" class="primary-button">Download CSV</button>
+    </div>
+    <p class="small">
+      Your answers stay saved in this browser, so you can download the file again
+      if you need to. Please send the CSV to the researcher.
+    </p>
+    <div class="button-row">
+      <button type="button" id="btn-complete-home" class="link-button">Back to start</button>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="view-instructions" class="view" hidden>
+    <h1>Review Instructions</h1>
+
+    <p>
+      Work through the images in order and record one answer per image. Please
+      review independently and do not discuss individual images with the other
+      reviewer until you have both finished.
+    </p>
+
+    <h2>Target classes</h2>
+    <p>Only these six classes matter for this review:</p>
+    <ul class="class-list">
+      <li>RedOnion_Raw</li>
+      <li>Yam_Raw</li>
+      <li>Tomato_Raw</li>
+      <li>Papaya</li>
+      <li>Potato_Raw</li>
+      <li>Lemon</li>
+    </ul>
+    <p>Other classes may be visible in an image. You do not need to review them.</p>
+
+    <h2>What to decide</h2>
+    <p>
+      For each image, look at the boxes and labels already drawn on it and decide
+      whether the existing annotation is correct for the six target classes.
+    </p>
+    <ul>
+      <li><strong>NO</strong> — the annotation looks fine.</li>
+      <li><strong>YES</strong> — there is a problem. Record the type, the affected classes and how many separate problems you found.</li>
+      <li><strong>AMBIGUOUS</strong> — you genuinely cannot tell. This is a valid and useful answer, so please do not force a guess.</li>
+    </ul>
+
+    <h2>Defect types</h2>
+    <dl class="defs">
+      <dt>MISSING_LABEL</dt>
+      <dd>An object of a target class is clearly visible, but it has no box or label.</dd>
+
+      <dt>WRONG_CLASS</dt>
+      <dd>There is a box, but the class on it is wrong. This includes both directions: a target class labelled as something else, and something else labelled as one of the target classes.</dd>
+
+      <dt>BBOX_ERROR</dt>
+      <dd>The box is clearly in the wrong place, or clearly the wrong size.</dd>
+
+      <dt>GRANULARITY_MISMATCH</dt>
+      <dd>The annotation is inconsistent about how objects are grouped — for example, some items of the same kind get one box each while others are covered by a single box around the group.</dd>
+
+      <dt>SPURIOUS_LABEL</dt>
+      <dd>There is an annotation where no such object actually exists.</dd>
+
+      <dt>OTHER</dt>
+      <dd>A clear annotation problem that does not fit any category above. Please describe it in the notes.</dd>
+    </dl>
+
+    <h2>Two kinds of image</h2>
+    <p>
+      The images do not all show the same information. Both kinds are a normal
+      part of this review — there is nothing wrong with the images themselves.
+    </p>
+
+    <h3>Images showing the current annotation only</h3>
+    <p>
+      These show the existing annotation and nothing else. Check the six target
+      classes and record what you find.
+    </p>
+
+    <h3>Images that also show model output</h3>
+    <p>
+      Some images additionally show what a detection model predicted, including
+      where the model disagreed with the annotation.
+    </p>
+    <p>
+      <strong>You may use this model output as a hint.</strong> It is there to
+      help you, and using it is part of what we are measuring. Please keep three
+      things in mind:
+    </p>
+    <ul>
+      <li>The model is <strong>not necessarily correct</strong>.</li>
+      <li>A disagreement between the model and the annotation is <strong>not by itself an annotation error</strong>.</li>
+      <li>You decide, by looking at the image yourself.</li>
+    </ul>
+    <p class="callout">
+      Check the whole image and the annotation for all six target classes — not
+      only the places the model pointed at.
+    </p>
+
+    <h2>Timing</h2>
+    <p>
+      The time you spend on each image is measured automatically, so there is
+      nothing to write down. Press <strong>Pause</strong> whenever you step away;
+      paused time is not counted. If you switch to another tab or window, timing
+      pauses on its own and waits for you to press <strong>Resume</strong>.
+    </p>
+
+    <h2>Moving through the review</h2>
+    <p>
+      Once you press <strong>Next</strong>, that image is final and you cannot
+      return to it. This is deliberate: please do not revise earlier answers
+      after seeing later images.
+    </p>
+    <p>
+      Your answers are saved in this browser as you go. If you close the page by
+      accident, reopen it, choose the same reviewer ID, and continue where you
+      left off.
+    </p>
+
+    <div class="button-row">
+      <button type="button" id="btn-instructions-back" class="primary-button">Back</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- Pause overlay -->
+<div id="pause-overlay" class="overlay" hidden>
+  <div class="overlay-card">
+    <h2 id="pause-title">Review paused</h2>
+    <p id="pause-message">Timing is stopped. Press Resume when you are ready to continue.</p>
+    <button type="button" id="btn-resume" class="primary-button">Resume</button>
+  </div>
+</div>
+
+<!-- Full-size image viewer -->
+<div id="zoom-overlay" class="overlay zoom" hidden>
+  <img id="zoom-image" alt="Image under review, full size">
+  <button type="button" id="btn-zoom-close" class="zoom-close" aria-label="Close">Close</button>
+</div>
+
+<script src="review-core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

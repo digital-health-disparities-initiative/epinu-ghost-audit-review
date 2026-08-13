@@ -1,0 +1,218 @@
+{
+  "reviewer_id": "reviewer1",
+  "task_count": 53,
+  "tasks": [
+    {
+      "task_id": "HGA_0001",
+      "image": "images/HGA_0001.jpg"
+    },
+    {
+      "task_id": "HGA_0002",
+      "image": "images/HGA_0002.jpg"
+    },
+    {
+      "task_id": "HGA_0003",
+      "image": "images/HGA_0003.jpg"
+    },
+    {
+      "task_id": "HGA_0004",
+      "image": "images/HGA_0004.jpg"
+    },
+    {
+      "task_id": "HGA_0005",
+      "image": "images/HGA_0005.jpg"
+    },
+    {
+      "task_id": "HGA_0006",
+      "image": "images/HGA_0006.jpg"
+    },
+    {
+      "task_id": "HGA_0007",
+      "image": "images/HGA_0007.jpg"
+    },
+    {
+      "task_id": "HGA_0008",
+      "image": "images/HGA_0008.jpg"
+    },
+    {
+      "task_id": "HGA_0009",
+      "image": "images/HGA_0009.jpg"
+    },
+    {
+      "task_id": "HGA_0010",
+      "image": "images/HGA_0010.jpg"
+    },
+    {
+      "task_id": "HGA_0011",
+      "image": "images/HGA_0011.jpg"
+    },
+    {
+      "task_id": "HGA_0012",
+      "image": "images/HGA_0012.jpg"
+    },
+    {
+      "task_id": "HGA_0013",
+      "image": "images/HGA_0013.jpg"
+    },
+    {
+      "task_id": "HGA_0014",
+      "image": "images/HGA_0014.jpg"
+    },
+    {
+      "task_id": "HGA_0015",
+      "image": "images/HGA_0015.jpg"
+    },
+    {
+      "task_id": "HGA_0016",
+      "image": "images/HGA_0016.jpg"
+    },
+    {
+      "task_id": "HGA_0017",
+      "image": "images/HGA_0017.jpg"
+    },
+    {
+      "task_id": "HGA_0018",
+      "image": "images/HGA_0018.jpg"
+    },
+    {
+      "task_id": "HGA_0019",
+      "image": "images/HGA_0019.jpg"
+    },
+    {
+      "task_id": "HGA_0020",
+      "image": "images/HGA_0020.jpg"
+    },
+    {
+      "task_id": "HGA_0021",
+      "image": "images/HGA_0021.jpg"
+    },
+    {
+      "task_id": "HGA_0022",
+      "image": "images/HGA_0022.jpg"
+    },
+    {
+      "task_id": "HGA_0023",
+      "image": "images/HGA_0023.jpg"
+    },
+    {
+      "task_id": "HGA_0024",
+      "image": "images/HGA_0024.jpg"
+    },
+    {
+      "task_id": "HGA_0025",
+      "image": "images/HGA_0025.jpg"
+    },
+    {
+      "task_id": "HGA_0026",
+      "image": "images/HGA_0026.jpg"
+    },
+    {
+      "task_id": "HGA_0027",
+      "image": "images/HGA_0027.jpg"
+    },
+    {
+      "task_id": "HGA_0028",
+      "image": "images/HGA_0028.jpg"
+    },
+    {
+      "task_id": "HGA_0029",
+      "image": "images/HGA_0029.jpg"
+    },
+    {
+      "task_id": "HGA_0030",
+      "image": "images/HGA_0030.jpg"
+    },
+    {
+      "task_id": "HGA_0031",
+      "image": "images/HGA_0031.jpg"
+    },
+    {
+      "task_id": "HGA_0032",
+      "image": "images/HGA_0032.jpg"
+    },
+    {
+      "task_id": "HGA_0033",
+      "image": "images/HGA_0033.jpg"
+    },
+    {
+      "task_id": "HGA_0034",
+      "image": "images/HGA_0034.jpg"
+    },
+    {
+      "task_id": "HGA_0035",
+      "image": "images/HGA_0035.jpg"
+    },
+    {
+      "task_id": "HGA_0036",
+      "image": "images/HGA_0036.jpg"
+    },
+    {
+      "task_id": "HGA_0037",
+      "image": "images/HGA_0037.jpg"
+    },
+    {
+      "task_id": "HGA_0038",
+      "image": "images/HGA_0038.jpg"
+    },
+    {
+      "task_id": "HGA_0039",
+      "image": "images/HGA_0039.jpg"
+    },
+    {
+      "task_id": "HGA_0040",
+      "image": "images/HGA_0040.jpg"
+    },
+    {
+      "task_id": "HGA_0041",
+      "image": "images/HGA_0041.jpg"
+    },
+    {
+      "task_id": "HGA_0042",
+      "image": "images/HGA_0042.jpg"
+    },
+    {
+      "task_id": "HGA_0043",
+      "image": "images/HGA_0043.jpg"
+    },
+    {
+      "task_id": "HGA_0044",
+      "image": "images/HGA_0044.jpg"
+    },
+    {
+      "task_id": "HGA_0045",
+      "image": "images/HGA_0045.jpg"
+    },
+    {
+      "task_id": "HGA_0046",
+      "image": "images/HGA_0046.jpg"
+    },
+    {
+      "task_id": "HGA_0047",
+      "image": "images/HGA_0047.jpg"
+    },
+    {
+      "task_id": "HGA_0048",
+      "image": "images/HGA_0048.jpg"
+    },
+    {
+      "task_id": "HGA_0049",
+      "image": "images/HGA_0049.jpg"
+    },
+    {
+      "task_id": "HGA_0050",
+      "image": "images/HGA_0050.jpg"
+    },
+    {
+      "task_id": "HGA_0051",
+      "image": "images/HGA_0051.jpg"
+    },
+    {
+      "task_id": "HGA_0052",
+      "image": "images/HGA_0052.jpg"
+    },
+    {
+      "task_id": "HGA_0053",
+      "image": "images/HGA_0053.jpg"
+    }
+  ]
+}
