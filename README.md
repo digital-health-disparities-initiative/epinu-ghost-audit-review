@@ -132,34 +132,36 @@ HGA_0002,reviewer1,YES,MISSING_LABEL;BBOX_ERROR,Tomato_Raw,2,"two tomatoes at th
 HGA_0003,reviewer1,AMBIGUOUS,,,,too blurry to call,44
 ```
 
-## Publishing to GitHub Pages
+## Live site
 
-This repository has no remote yet. To publish it:
+**https://digital-health-disparities-initiative.github.io/epinu-ghost-audit-review/**
+
+This is the URL to give the reviewers. No login, no setup — they open it, pick
+their reviewer ID and start.
+
+Published from the `main` branch (root) of
+`digital-health-disparities-initiative/epinu-ghost-audit-review`. Pushing to
+`main` redeploys automatically; there is no build step, and `.nojekyll` makes
+GitHub serve every file as-is.
+
+**The site and repository are public.** Anyone with the URL can view all 106
+review images. The page sends `noindex, nofollow`, which discourages but does not
+guarantee exclusion from search engines. To take it down: **Settings → Pages →
+Unpublish site**, or make the repository private.
+
+### Deploying changes
 
 ```bash
-gh repo create epinu-ghost-audit-review --public --source=. --remote=origin --push
+git add -A && git commit -m "..." && git push
 ```
 
-or manually:
+The first push of this repository needed two local settings, already applied:
 
 ```bash
-git remote add origin https://github.com/<account>/epinu-ghost-audit-review.git
-git branch -M main
-git push -u origin main
+git config --local credential.helper ""            # skip the stale osxkeychain entry
+git config --local --add credential.helper '!gh auth git-credential'
+git config --local http.postBuffer 524288000       # 19 MB of images in one push
 ```
-
-Then in the repository on GitHub: **Settings → Pages → Build and deployment →
-Source: "Deploy from a branch" → Branch: `main` / `/ (root)` → Save.**
-
-The site appears at `https://<account>.github.io/epinu-ghost-audit-review/` after
-a minute or two. No build step is required; `.nojekyll` is included so GitHub
-serves every file as-is.
-
-**Before publishing, note that a GitHub Pages site is public.** That makes all
-106 review images publicly readable by anyone with the URL. If that is not
-acceptable for this dataset, host the folder privately instead — any static file
-server works, including `python3 -m http.server` on a machine the reviewers can
-reach.
 
 ## Reviewer instructions
 
