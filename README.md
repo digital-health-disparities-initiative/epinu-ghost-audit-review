@@ -155,13 +155,31 @@ Unpublish site**, or make the repository private.
 git add -A && git commit -m "..." && git push
 ```
 
-The first push of this repository needed two local settings, already applied:
+Pushing needed three local settings, already applied to this clone:
 
 ```bash
-git config --local credential.helper ""            # skip the stale osxkeychain entry
-git config --local --add credential.helper '!gh auth git-credential'
-git config --local http.postBuffer 524288000       # 19 MB of images in one push
+# 19 MB of images in a single push
+git config --local http.postBuffer 524288000
+
+# Take the token from the gh CLI instead of a stale keychain entry
+git config --local credential.helper ""
+git config --local --add credential.helper \
+  '!f() { echo username=x-access-token; echo "password=$(gh auth token)"; }; f'
+
+# The remote is set to https://x-access-token@github.com/... on purpose (below)
 ```
+
+**Why the odd remote URL:** the machine's *global* git config contains
+
+```
+url.https://<user>:<personal-access-token>@github.com/.insteadOf  https://github.com/
+```
+
+which rewrites every plain `https://github.com/...` URL to embed a hardcoded
+username and an expired token, bypassing all credential helpers. Qualifying the
+remote as `https://x-access-token@github.com/...` no longer matches that prefix,
+so the rewrite does not fire and the helper above is used instead. If that global
+rule is ever removed, the remote can be simplified back to the plain URL.
 
 ## Reviewer instructions
 
