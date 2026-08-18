@@ -203,6 +203,119 @@ test("storage keys differ per reviewer", () => {
   assert.notStrictEqual(Core.storageKey("reviewer1"), Core.storageKey("reviewer2"));
 });
 
+console.log("\n[adjudication validation]");
+
+test("no decision is rejected", () => {
+  assert.strictEqual(Core.validateAdjudication({ defectFound: null }).ok, false);
+});
+
+test("NO needs nothing else", () => {
+  assert.strictEqual(Core.validateAdjudication({ defectFound: "NO" }).ok, true);
+});
+
+test("AMBIGUOUS without notes is rejected", () => {
+  const v = Core.validateAdjudication({ defectFound: "AMBIGUOUS", notes: "" });
+  assert.strictEqual(v.ok, false);
+  assert.match(v.message, /requires a note/);
+});
+
+test("AMBIGUOUS with whitespace-only notes is rejected", () => {
+  assert.strictEqual(
+    Core.validateAdjudication({ defectFound: "AMBIGUOUS", notes: "   " }).ok, false);
+});
+
+test("AMBIGUOUS with notes is accepted", () => {
+  assert.strictEqual(
+    Core.validateAdjudication({ defectFound: "AMBIGUOUS", notes: "cannot resolve" }).ok,
+    true);
+});
+
+test("YES needs type, class and count", () => {
+  assert.strictEqual(Core.validateAdjudication({
+    defectFound: "YES", defectTypes: [], targetClasses: ["Lemon"], numberOfDefects: 1,
+  }).ok, false);
+  assert.strictEqual(Core.validateAdjudication({
+    defectFound: "YES", defectTypes: ["OTHER"], targetClasses: [], numberOfDefects: 1,
+  }).ok, false);
+  assert.strictEqual(Core.validateAdjudication({
+    defectFound: "YES", defectTypes: ["OTHER"], targetClasses: ["Lemon"], numberOfDefects: 0,
+  }).ok, false);
+  assert.strictEqual(Core.validateAdjudication({
+    defectFound: "YES", defectTypes: ["OTHER"], targetClasses: ["Lemon"], numberOfDefects: 1,
+  }).ok, true);
+});
+
+console.log("\n[adjudication records]");
+
+test("NO normalises to NONE / 0 with no classes", () => {
+  const r = Core.buildAdjudication({ defectFound: "NO", notes: "" }, { queue_id: 3 });
+  assert.strictEqual(r.queue_id, 3);
+  assert.strictEqual(r.final_defect_types, "NONE");
+  assert.strictEqual(r.final_number_of_defects, 0);
+  assert.strictEqual(r.final_target_classes, "");
+});
+
+test("YES joins with semicolons", () => {
+  const r = Core.buildAdjudication({
+    defectFound: "YES", defectTypes: ["MISSING_LABEL", "BBOX_ERROR"],
+    targetClasses: ["Lemon", "Papaya"], numberOfDefects: 4, notes: "n",
+  }, { queue_id: 7 });
+  assert.strictEqual(r.final_defect_types, "MISSING_LABEL;BBOX_ERROR");
+  assert.strictEqual(r.final_target_classes, "Lemon;Papaya");
+  assert.strictEqual(r.final_number_of_defects, 4);
+});
+
+test("AMBIGUOUS keeps the note and leaves details empty", () => {
+  const r = Core.buildAdjudication(
+    { defectFound: "AMBIGUOUS", notes: "unclear" }, { queue_id: 9 });
+  assert.strictEqual(r.final_defect_found, "AMBIGUOUS");
+  assert.strictEqual(r.final_defect_types, "");
+  assert.strictEqual(r.final_adjudication_notes, "unclear");
+});
+
+console.log("\n[adjudication csv]");
+
+test("header is exactly the requested columns", () => {
+  assert.strictEqual(
+    Core.buildAdjudicationCsv([], {}).split("\r\n")[0],
+    "queue_id,final_defect_found,final_defect_types,final_target_classes," +
+    "final_number_of_defects,final_adjudication_notes");
+});
+
+test("rows follow queue order, not answer order", () => {
+  const entries = [{ queue_id: 1 }, { queue_id: 2 }, { queue_id: 3 }];
+  const answers = {
+    3: Core.buildAdjudication({ defectFound: "NO" }, { queue_id: 3 }),
+    1: Core.buildAdjudication({ defectFound: "NO" }, { queue_id: 1 }),
+    2: Core.buildAdjudication({ defectFound: "NO" }, { queue_id: 2 }),
+  };
+  const lines = Core.buildAdjudicationCsv(entries, answers).trim().split("\r\n");
+  assert.deepStrictEqual(lines.slice(1).map((l) => l.split(",")[0]), ["1", "2", "3"]);
+});
+
+test("unanswered queue entries are skipped", () => {
+  const entries = [{ queue_id: 1 }, { queue_id: 2 }];
+  const answers = { 1: Core.buildAdjudication({ defectFound: "NO" }, { queue_id: 1 }) };
+  assert.strictEqual(
+    Core.buildAdjudicationCsv(entries, answers).trim().split("\r\n").length, 2);
+});
+
+test("adjudication notes survive commas, quotes and newlines", () => {
+  const entries = [{ queue_id: 1 }];
+  const answers = {
+    1: Core.buildAdjudication(
+      { defectFound: "AMBIGUOUS", notes: 'a,b "c"\nd' }, { queue_id: 1 }),
+  };
+  const parsed = parseCsv(Core.buildAdjudicationCsv(entries, answers));
+  assert.strictEqual(parsed[1][5], 'a,b "c"\nd');
+});
+
+test("adjudication storage key is separate from the reviewer keys", () => {
+  assert.notStrictEqual(Core.ADJUDICATION_STORAGE_KEY, Core.storageKey("reviewer1"));
+  assert.notStrictEqual(Core.ADJUDICATION_STORAGE_KEY, Core.storageKey("reviewer3"));
+  assert.ok(!Core.ADJUDICATION_STORAGE_KEY.startsWith(Core.STORAGE_PREFIX + ":"));
+});
+
 // --- minimal RFC4180 parser used only by the round-trip test ---------------
 function parseCsv(text) {
   const rows = [];

@@ -317,3 +317,52 @@ textarea {
   .class-list { columns: 1; }
   #review-image { max-height: 54vh; }
 }
+
+/* ------------------------------------------------- Final Adjudication */
+.big-button.alt {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.big-button.alt:hover { background: var(--ok); color: #fff; }
+
+.issue-panel { margin: 18px 0; max-width: 70ch; }
+.issue-title { margin: 0 0 4px; font-size: 17px; }
+
+#adj-previous {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.prev-review {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+}
+.prev-review h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.prev-review-fields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  margin: 0;
+  font-size: 15px;
+}
+.prev-review-fields dt { color: var(--muted); }
+.prev-review-fields dd { margin: 0; overflow-wrap: anywhere; }
+
+.decision { font-weight: 700; }
+.decision-yes { color: var(--danger); }
+.decision-no { color: var(--ok); }
+.decision-ambiguous { color: #9a6a00; }
+
+#adj-image { max-width: 100%; max-height: 68vh; object-fit: contain; cursor: zoom-in; display: block; }
+#btn-adj-prev:disabled { opacity: 0.45; cursor: not-allowed; }

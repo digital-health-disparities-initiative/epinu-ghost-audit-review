@@ -24,6 +24,7 @@
       <button type="button" class="big-button" data-reviewer="reviewer1">Reviewer 1</button>
       <button type="button" class="big-button" data-reviewer="reviewer2">Reviewer 2</button>
       <button type="button" class="big-button" data-reviewer="reviewer3">Reviewer 3</button>
+      <button type="button" class="big-button alt" id="btn-adjudication">Final Adjudication</button>
     </div>
     <p class="footnote">
       Please complete your review independently, and do not discuss individual
@@ -150,6 +151,138 @@
     </p>
     <div class="button-row">
       <button type="button" id="btn-complete-home" class="link-button">Back to start</button>
+    </div>
+  </section>
+
+  <!-- ------------------------- Final Adjudication ------------------- -->
+  <section id="view-adj-brief" class="view" hidden>
+    <h1>Final Adjudication</h1>
+    <p class="stat"><strong id="adj-count">26</strong> images require final confirmation</p>
+
+    <div id="adj-progress" class="notice" hidden>
+      <p><strong id="adj-progress-text">0 / 26 completed</strong></p>
+      <p class="small">Saved progress was found in this browser.</p>
+    </div>
+
+    <div class="panel">
+      <h2>What this is</h2>
+      <p>
+        These images are the ones where the earlier reviews disagreed. Your job is
+        <strong>not</strong> to decide who was right — it is to decide what the
+        annotation should say.
+      </p>
+      <p>
+        Each image shows the current annotation. The earlier decisions are listed
+        underneath, and where a model-assisted view exists you can switch to it.
+        Use whatever helps you reach the correct answer.
+      </p>
+      <p class="small">
+        You can move back and forth with <strong>Previous</strong> and
+        <strong>Next</strong>, and change an answer at any time. Everything is
+        saved in this browser as you go.
+      </p>
+      <h3>Target classes</h3>
+      <ul class="class-list">
+        <li>RedOnion_Raw</li>
+        <li>Yam_Raw</li>
+        <li>Tomato_Raw</li>
+        <li>Papaya</li>
+        <li>Potato_Raw</li>
+        <li>Lemon</li>
+      </ul>
+    </div>
+
+    <div class="button-row">
+      <button type="button" id="btn-adj-start" class="primary-button">Start</button>
+      <button type="button" id="btn-adj-home" class="link-button">Back to start</button>
+    </div>
+  </section>
+
+  <section id="view-adj" class="view" hidden>
+    <div class="review-header">
+      <span class="task-counter" id="adj-counter">Image 1 / 26</span>
+      <span class="spacer"></span>
+      <span class="small" id="adj-answered">0 / 26 answered</span>
+      <button type="button" id="btn-adj-toggle-view" class="secondary-button">Show model-assisted view</button>
+    </div>
+
+    <div class="image-frame">
+      <img id="adj-image" alt="Image under final adjudication" />
+    </div>
+    <p class="small image-hint">Click the image to open it at full size.</p>
+
+    <div class="panel issue-panel">
+      <h3 class="issue-title">Issue: <span id="adj-issue">—</span></h3>
+      <p class="small" id="adj-issue-explanation"></p>
+    </div>
+
+    <h2>Previous reviews</h2>
+    <div id="adj-previous"></div>
+
+    <form id="adj-form" novalidate>
+      <fieldset class="question">
+        <legend>Final annotation defect?</legend>
+        <div class="choice-row" role="radiogroup" aria-label="Final annotation defect?">
+          <button type="button" class="choice-button" data-adj-answer="NO">NO</button>
+          <button type="button" class="choice-button" data-adj-answer="YES">YES</button>
+          <button type="button" class="choice-button" data-adj-answer="AMBIGUOUS">AMBIGUOUS</button>
+        </div>
+      </fieldset>
+
+      <div id="adj-yes-fields" hidden>
+        <fieldset>
+          <legend>Final defect type <span class="req">(select at least one)</span></legend>
+          <div class="checkbox-grid" id="adj-defect-types"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Affected target class <span class="req">(select at least one)</span></legend>
+          <div class="checkbox-grid" id="adj-target-classes"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Number of defects <span class="req">(1 or more)</span></legend>
+          <input type="number" id="adj-defect-count" min="1" step="1" value="1" class="number-input">
+        </fieldset>
+      </div>
+
+      <div id="adj-ambiguous-hint" class="notice" hidden>
+        <p class="small">
+          A note is <strong>required</strong> for AMBIGUOUS. Please say what could
+          not be resolved. Aim to settle on YES or NO wherever you can.
+        </p>
+      </div>
+
+      <fieldset>
+        <legend>Final notes <span id="adj-notes-req" class="optional">(optional)</span></legend>
+        <textarea id="adj-notes" rows="3" placeholder="Reasoning for the final decision."></textarea>
+      </fieldset>
+
+      <p id="adj-validation" class="validation" role="alert" hidden></p>
+
+      <div class="button-row">
+        <button type="button" id="btn-adj-prev" class="secondary-button">← Previous</button>
+        <button type="submit" id="btn-adj-next" class="primary-button">Next →</button>
+        <button type="button" id="btn-adj-finish" class="link-button">Go to summary</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="view-adj-complete" class="view" hidden>
+    <h1>Final Adjudication Complete</h1>
+    <p class="stat"><strong id="adj-complete-count">26 / 26</strong> completed</p>
+    <p id="adj-incomplete-warning" class="validation" hidden></p>
+    <p>Every image in the queue now has a final decision.</p>
+    <div class="button-row">
+      <button type="button" id="btn-adj-download" class="primary-button">Download Final Adjudication CSV</button>
+    </div>
+    <p class="small">
+      Your answers stay saved in this browser, so the file can be downloaded
+      again. Merge it back into the workbook using <code>queue_id</code>.
+    </p>
+    <div class="button-row">
+      <button type="button" id="btn-adj-back-review" class="link-button">Back to the images</button>
+      <button type="button" id="btn-adj-complete-home" class="link-button">Back to start</button>
     </div>
   </section>
 
@@ -313,5 +446,6 @@
 
 <script src="review-core.js"></script>
 <script src="app.js"></script>
+<script src="adjudication.js"></script>
 </body>
 </html>

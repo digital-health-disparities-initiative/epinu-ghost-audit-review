@@ -156,6 +156,92 @@
     }, 0);
   }
 
+  // -------------------------------------------------------------------------
+  // Final Adjudication
+  // -------------------------------------------------------------------------
+  var ADJUDICATION_STORAGE_KEY = "epinu-hga-adjudication-v1";
+
+  var ADJUDICATION_CSV_COLUMNS = [
+    "queue_id",
+    "final_defect_found",
+    "final_defect_types",
+    "final_target_classes",
+    "final_number_of_defects",
+    "final_adjudication_notes",
+  ];
+
+  /**
+   * YES needs a type, a class and a count of 1+. AMBIGUOUS requires notes --
+   * the aim is to land on YES or NO, so an unresolved case has to be explained.
+   */
+  function validateAdjudication(draft) {
+    if (!draft || !draft.defectFound) {
+      return { ok: false, message: "Please choose NO, YES or AMBIGUOUS." };
+    }
+    if (draft.defectFound === "AMBIGUOUS") {
+      if (!draft.notes || !String(draft.notes).trim()) {
+        return {
+          ok: false,
+          message: "AMBIGUOUS requires a note explaining what could not be resolved.",
+        };
+      }
+      return { ok: true, message: "" };
+    }
+    if (draft.defectFound === "NO") {
+      return { ok: true, message: "" };
+    }
+    var problems = [];
+    if (!draft.defectTypes || draft.defectTypes.length === 0) {
+      problems.push("select at least one defect type");
+    }
+    if (!draft.targetClasses || draft.targetClasses.length === 0) {
+      problems.push("select at least one affected target class");
+    }
+    var count = Number(draft.numberOfDefects);
+    if (!Number.isInteger(count) || count < 1) {
+      problems.push("enter a number of defects of 1 or more");
+    }
+    if (problems.length > 0) {
+      return { ok: false, message: "Please " + problems.join(", ") + "." };
+    }
+    return { ok: true, message: "" };
+  }
+
+  function buildAdjudication(draft, entry) {
+    var record = {
+      queue_id: entry.queue_id,
+      final_defect_found: draft.defectFound,
+      final_defect_types: "",
+      final_target_classes: "",
+      final_number_of_defects: "",
+      final_adjudication_notes: draft.notes ? String(draft.notes) : "",
+    };
+    if (draft.defectFound === "NO") {
+      record.final_defect_types = "NONE";
+      record.final_number_of_defects = 0;
+    } else if (draft.defectFound === "YES") {
+      record.final_defect_types = (draft.defectTypes || []).join(LIST_SEPARATOR);
+      record.final_target_classes = (draft.targetClasses || []).join(LIST_SEPARATOR);
+      record.final_number_of_defects = Number(draft.numberOfDefects);
+    }
+    return record;
+  }
+
+  /** Rows follow the queue order so the CSV lines up with the workbook. */
+  function buildAdjudicationCsv(entries, answersByQueueId) {
+    var lines = [ADJUDICATION_CSV_COLUMNS.join(",")];
+    (entries || []).forEach(function (entry) {
+      var answer = (answersByQueueId || {})[entry.queue_id];
+      if (!answer) return;
+      lines.push(
+        ADJUDICATION_CSV_COLUMNS.map(function (column) {
+          return csvEscape(answer[column]);
+        }).join(",")
+      );
+    });
+    return lines.join("\r\n") + "\r\n";
+  }
+
   var api = {
     STORAGE_PREFIX: STORAGE_PREFIX,
     TARGET_CLASSES: TARGET_CLASSES,
@@ -171,6 +257,11 @@
     formatDuration: formatDuration,
     formatTotalTime: formatTotalTime,
     totalReviewSeconds: totalReviewSeconds,
+    ADJUDICATION_STORAGE_KEY: ADJUDICATION_STORAGE_KEY,
+    ADJUDICATION_CSV_COLUMNS: ADJUDICATION_CSV_COLUMNS,
+    validateAdjudication: validateAdjudication,
+    buildAdjudication: buildAdjudication,
+    buildAdjudicationCsv: buildAdjudicationCsv,
   };
 
   if (typeof module !== "undefined" && module.exports) {

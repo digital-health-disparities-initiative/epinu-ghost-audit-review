@@ -15,6 +15,7 @@ import argparse
 import csv
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -257,6 +258,38 @@ def main() -> int:
                   csv.DictReader((source / reviewer / "review.csv").open(encoding="utf-8"))])
     check("unchanged", "reviewer3 shares no task id with reviewer 1/2",
           not (set(r3_ids) & (ids["reviewer1"] | ids["reviewer2"])))
+
+    # --- final adjudication -------------------------------------------------
+    adj_dir = SITE_ROOT / "data" / "final_adjudication"
+    if adj_dir.is_dir():
+        payload = json.loads((adj_dir / "queue.json").read_text(encoding="utf-8"))
+        entries = payload["entries"]
+        qids = [e["queue_id"] for e in entries]
+        gt = sorted(p.name for p in (adj_dir / "images").iterdir() if p.is_file())
+        mv = sorted(p.name for p in (adj_dir / "images_model").iterdir() if p.is_file())
+
+        check("adjudication", "queue has 26 entries", len(entries) == 26, f"got {len(entries)}")
+        check("adjudication", "no duplicate queue_id", len(set(qids)) == len(qids))
+        check("adjudication", "26 GT-only images", len(gt) == 26, f"got {len(gt)}")
+        check("adjudication", "every entry's GT image exists",
+              all((adj_dir / e["gt_image"]).is_file() for e in entries))
+        check("adjudication", "model views exist exactly where declared",
+              mv == sorted(Path(e["model_image"]).name for e in entries if e["model_image"]))
+        check("adjudication", "every entry has a primary review and a Reviewer 3 result",
+              all(e["primary_reviews"] and e["reviewer3"]["decision"] for e in entries))
+        check("adjudication", "queue.json carries no original file name",
+              not any(m["original_file_name"] in json.dumps(payload)
+                      for m in csv.DictReader(
+                          (SITE_ROOT / "data"
+                           / "final_adjudication_mapping_researcher.csv").open(encoding="utf-8"))))
+        for name in ("Claim2_Human_Ghost_Audit_Final_Confirmation_List.xlsx",
+                     "final_adjudication_mapping_researcher.csv"):
+            check("adjudication", f"{name} is git-ignored",
+                  subprocess.run(["git", "check-ignore", "-q", f"data/{name}"],
+                                 cwd=SITE_ROOT, capture_output=True).returncode == 0)
+        check("adjudication", "no workbook is tracked by git",
+              not subprocess.run(["git", "ls-files", "*.xlsx"], cwd=SITE_ROOT,
+                                 capture_output=True, text=True).stdout.strip())
 
     # --- csv schema ---------------------------------------------------------
     core = (SITE_ROOT / "review-core.js").read_text(encoding="utf-8")

@@ -16,3 +16,8 @@ node_modules/
 # Researcher-only — must never reach the public Pages site
 *_researcher.csv
 data/reviewer3_verification_selection_researcher.csv
+data/final_adjudication_mapping_researcher.csv
+*.xlsx
+
+# Python
+__pycache__/

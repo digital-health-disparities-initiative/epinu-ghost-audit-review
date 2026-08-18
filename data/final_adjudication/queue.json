@@ -1,0 +1,657 @@
+{
+  "queue_count": 26,
+  "entries": [
+    {
+      "queue_id": 1,
+      "image_id": "FA_0001",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0001.jpg",
+      "model_image": "images_model/FA_0001.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL;BBOX_ERROR",
+          "target_classes": "RedOnion_Raw",
+          "number_of_defects": "1",
+          "notes": "missing bbox."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 2,
+      "image_id": "FA_0002",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0002.jpg",
+      "model_image": "images_model/FA_0002.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Tomato_Raw",
+          "number_of_defects": "3",
+          "notes": "Tomatoes in the background (blurred) are missing labels/boxes."
+        },
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL;BBOX_ERROR",
+          "target_classes": "Tomato_Raw",
+          "number_of_defects": "3",
+          "notes": "3 missing bboxes"
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 3,
+      "image_id": "FA_0003",
+      "issue": "Defect-type mismatch",
+      "issue_explanation": "Both reviews found a defect, but they disagreed about the defect type.",
+      "gt_image": "images/FA_0003.jpg",
+      "model_image": "images_model/FA_0003.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "BBOX_ERROR",
+          "target_classes": "Lemon",
+          "number_of_defects": "2",
+          "notes": "two missing green/ GT bounding boxes on lemons"
+        }
+      ],
+      "reviewer3": {
+        "decision": "YES",
+        "defect_types": "MISSING_LABEL",
+        "target_classes": "Lemon",
+        "number_of_defects": "1",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 4,
+      "image_id": "FA_0004",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0004.jpg",
+      "model_image": "images_model/FA_0004.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Lemon",
+          "number_of_defects": "8",
+          "notes": "Lemon halves are missing labels/boxes."
+        },
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL;BBOX_ERROR",
+          "target_classes": "Lemon",
+          "number_of_defects": "8",
+          "notes": ""
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 5,
+      "image_id": "FA_0005",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0005.jpg",
+      "model_image": null,
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Lemon",
+          "number_of_defects": "1",
+          "notes": "Lemon half is missing a label/box."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 6,
+      "image_id": "FA_0006",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0006.jpg",
+      "model_image": null,
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Lemon",
+          "number_of_defects": "1",
+          "notes": "Lemon half missing a label/box."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 7,
+      "image_id": "FA_0007",
+      "issue": "Defect-type mismatch",
+      "issue_explanation": "Both reviews found a defect, but they disagreed about the defect type.",
+      "gt_image": "images/FA_0007.jpg",
+      "model_image": "images_model/FA_0007.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "BBOX_ERROR",
+          "target_classes": "Lemon",
+          "number_of_defects": "2",
+          "notes": ""
+        }
+      ],
+      "reviewer3": {
+        "decision": "YES",
+        "defect_types": "MISSING_LABEL",
+        "target_classes": "Lemon",
+        "number_of_defects": "1",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 8,
+      "image_id": "FA_0008",
+      "issue": "Defect-type mismatch",
+      "issue_explanation": "Both reviews found a defect, but they disagreed about the defect type.",
+      "gt_image": "images/FA_0008.jpg",
+      "model_image": "images_model/FA_0008.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL;BBOX_ERROR",
+          "target_classes": "Lemon",
+          "number_of_defects": "4",
+          "notes": ""
+        }
+      ],
+      "reviewer3": {
+        "decision": "YES",
+        "defect_types": "MISSING_LABEL",
+        "target_classes": "Lemon",
+        "number_of_defects": "1",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 9,
+      "image_id": "FA_0009",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0009.jpg",
+      "model_image": "images_model/FA_0009.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "BBOX_ERROR",
+          "target_classes": "Lemon",
+          "number_of_defects": "2",
+          "notes": "missing bounding box on two lemons"
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 10,
+      "image_id": "FA_0010",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0010.jpg",
+      "model_image": "images_model/FA_0010.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL;BBOX_ERROR",
+          "target_classes": "Lemon",
+          "number_of_defects": "2",
+          "notes": "one missing bounding box; one imprecise bounding box."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 11,
+      "image_id": "FA_0011",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0011.jpg",
+      "model_image": "images_model/FA_0011.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL;WRONG_CLASS",
+          "target_classes": "RedOnion_Raw",
+          "number_of_defects": "3",
+          "notes": "Leeks labeled as red onion, and two shallots not boxed/labeled."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 12,
+      "image_id": "FA_0012",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0012.jpg",
+      "model_image": "images_model/FA_0012.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "BBOX_ERROR",
+          "target_classes": "RedOnion_Raw",
+          "number_of_defects": "1",
+          "notes": "bbox on back white onion too imprecise / too big"
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 13,
+      "image_id": "FA_0013",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0013.jpg",
+      "model_image": "images_model/FA_0013.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Papaya",
+          "number_of_defects": "6",
+          "notes": "Papayas in the background (blurred) are missing labels."
+        },
+        {
+          "decision": "YES",
+          "defect_types": "BBOX_ERROR",
+          "target_classes": "Papaya",
+          "number_of_defects": "1",
+          "notes": "in focus full papaya with no bbox."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 14,
+      "image_id": "FA_0014",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0014.jpg",
+      "model_image": "images_model/FA_0014.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "BBOX_ERROR;SPURIOUS_LABEL",
+          "target_classes": "Papaya",
+          "number_of_defects": "2",
+          "notes": "trunk/ stem of tree mislabeled as papaya and 2) random bbox on 'trunk'"
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 15,
+      "image_id": "FA_0015",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0015.jpg",
+      "model_image": "images_model/FA_0015.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "WRONG_CLASS",
+          "target_classes": "Papaya",
+          "number_of_defects": "4",
+          "notes": "Melon and orange halves labeled as papaya."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 16,
+      "image_id": "FA_0016",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0016.jpg",
+      "model_image": "images_model/FA_0016.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "GRANULARITY_MISMATCH",
+          "target_classes": "Papaya",
+          "number_of_defects": "3",
+          "notes": ""
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 17,
+      "image_id": "FA_0017",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0017.jpg",
+      "model_image": "images_model/FA_0017.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "WRONG_CLASS",
+          "target_classes": "Papaya",
+          "number_of_defects": "1",
+          "notes": "papaya mispredicted as guava"
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 18,
+      "image_id": "FA_0018",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0018.jpg",
+      "model_image": "images_model/FA_0018.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL;BBOX_ERROR",
+          "target_classes": "Potato_Raw",
+          "number_of_defects": "4",
+          "notes": "3 missing bboxes; 1 imprecise bbox. no predictions."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 19,
+      "image_id": "FA_0019",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0019.jpg",
+      "model_image": "images_model/FA_0019.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Potato_Raw",
+          "number_of_defects": "3",
+          "notes": "Potatoes in the background (blurred) are missing labels/boxes."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 20,
+      "image_id": "FA_0020",
+      "issue": "Defect-type mismatch",
+      "issue_explanation": "Both reviews found a defect, but they disagreed about the defect type.",
+      "gt_image": "images/FA_0020.jpg",
+      "model_image": "images_model/FA_0020.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "BBOX_ERROR",
+          "target_classes": "Tomato_Raw",
+          "number_of_defects": "7",
+          "notes": "missing bboxes"
+        }
+      ],
+      "reviewer3": {
+        "decision": "YES",
+        "defect_types": "MISSING_LABEL",
+        "target_classes": "Tomato_Raw",
+        "number_of_defects": "3",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 21,
+      "image_id": "FA_0021",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0021.jpg",
+      "model_image": "images_model/FA_0021.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Tomato_Raw",
+          "number_of_defects": "6",
+          "notes": "Tomatoes in the background (blurred) are missing labels/boxes."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 22,
+      "image_id": "FA_0022",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0022.jpg",
+      "model_image": "images_model/FA_0022.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Tomato_Raw",
+          "number_of_defects": "3",
+          "notes": "Tomatoes in the background of the image missing labels"
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 23,
+      "image_id": "FA_0023",
+      "issue": "Defect-type mismatch",
+      "issue_explanation": "Both reviews found a defect, but they disagreed about the defect type.",
+      "gt_image": "images/FA_0023.jpg",
+      "model_image": "images_model/FA_0023.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL;BBOX_ERROR",
+          "target_classes": "Tomato_Raw",
+          "number_of_defects": "4",
+          "notes": ""
+        }
+      ],
+      "reviewer3": {
+        "decision": "YES",
+        "defect_types": "BBOX_ERROR",
+        "target_classes": "Tomato_Raw",
+        "number_of_defects": "5",
+        "notes": "small"
+      }
+    },
+    {
+      "queue_id": 24,
+      "image_id": "FA_0024",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0024.jpg",
+      "model_image": "images_model/FA_0024.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "MISSING_LABEL",
+          "target_classes": "Tomato_Raw",
+          "number_of_defects": "5",
+          "notes": "Tomatoes in the background (blurred) are missing labels/boxes."
+        },
+        {
+          "decision": "YES",
+          "defect_types": "BBOX_ERROR",
+          "target_classes": "Tomato_Raw",
+          "number_of_defects": "7",
+          "notes": "assume tomatoes not included in bounding boxes b/c they are out of focus. no clear whether they should be bound or not?"
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 25,
+      "image_id": "FA_0025",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0025.jpg",
+      "model_image": "images_model/FA_0025.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "WRONG_CLASS",
+          "target_classes": "Potato_Raw",
+          "number_of_defects": "1",
+          "notes": "(Sweet potato vs yam)"
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    },
+    {
+      "queue_id": 26,
+      "image_id": "FA_0026",
+      "issue": "YES vs NO disagreement",
+      "issue_explanation": "The primary reviewer thought a defect was present, but Reviewer 3 did not.",
+      "gt_image": "images/FA_0026.jpg",
+      "model_image": "images_model/FA_0026.jpg",
+      "primary_reviews": [
+        {
+          "decision": "YES",
+          "defect_types": "SPURIOUS_LABEL",
+          "target_classes": "Yam_Raw",
+          "number_of_defects": "1",
+          "notes": "sweet potato mislabeled as yam."
+        }
+      ],
+      "reviewer3": {
+        "decision": "NO",
+        "defect_types": "NONE",
+        "target_classes": "",
+        "number_of_defects": "0",
+        "notes": ""
+      }
+    }
+  ]
+}

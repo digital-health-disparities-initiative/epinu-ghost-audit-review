@@ -53,6 +53,7 @@
       "pause-message", "btn-resume", "complete-count", "complete-time",
       "btn-download", "btn-complete-home", "zoom-overlay", "zoom-image",
       "btn-zoom-close", "instr-r12", "instr-r3", "instr-select-first",
+      "view-adj-brief", "view-adj", "view-adj-complete",
     ].forEach(function (id) {
       el[id] = $(id);
     });
@@ -61,7 +62,12 @@
   // -----------------------------------------------------------------------
   // Views
   // -----------------------------------------------------------------------
-  var VIEWS = ["view-landing", "view-brief", "view-review", "view-complete", "view-instructions"];
+  var VIEWS = [
+    "view-landing", "view-brief", "view-review", "view-complete",
+    "view-instructions",
+    // Owned by adjudication.js, listed here so showView() hides them too.
+    "view-adj-brief", "view-adj", "view-adj-complete",
+  ];
 
   function showView(name) {
     VIEWS.forEach(function (view) {
@@ -471,8 +477,7 @@
 
     // Full-size image viewer.
     el["review-image"].addEventListener("click", function () {
-      el["zoom-image"].src = el["review-image"].src;
-      el["zoom-overlay"].hidden = false;
+      openZoom(el["review-image"].src);
     });
     el["btn-zoom-close"].addEventListener("click", function () {
       el["zoom-overlay"].hidden = true;
@@ -489,11 +494,16 @@
     // Guard against closing the tab mid-task; the answer in progress is not
     // saved until Next is pressed.
     window.addEventListener("beforeunload", function (event) {
-      if (!el["view-review"].hidden) {
+      if (!el["view-review"].hidden || !el["view-adj"].hidden) {
         event.preventDefault();
         event.returnValue = "";
       }
     });
+  }
+
+  function openZoom(src) {
+    el["zoom-image"].src = src;
+    el["zoom-overlay"].hidden = false;
   }
 
   function init() {
@@ -505,6 +515,16 @@
     bindEvents();
     showView("view-landing");
   }
+
+  // Shared with adjudication.js, which owns its own views but needs the page's
+  // view switching and the full-size image viewer.
+  window.ReviewApp = {
+    showView: function (name) {
+      state.reviewerId = null;
+      showView(name);
+    },
+    openZoom: openZoom,
+  };
 
   document.addEventListener("DOMContentLoaded", init);
 })();

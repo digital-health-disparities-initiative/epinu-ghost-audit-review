@@ -49,9 +49,15 @@ main research repository:
 │   ├── reviewer1/{images/ (53), tasks.json}
 │   ├── reviewer2/{images/ (53), tasks.json}
 │   ├── reviewer3/{images/ (47), tasks.json}
-│   └── reviewer3_verification_selection_researcher.csv   <- git-ignored
+│   ├── final_adjudication/{images/ (26), images_model/ (24), queue.json}
+│   ├── reviewer3_verification_selection_researcher.csv    <- git-ignored
+│   ├── final_adjudication_mapping_researcher.csv          <- git-ignored
+│   └── Claim2_..._Final_Confirmation_List.xlsx            <- git-ignored
+├── adjudication.js       Final Adjudication screen
 ├── tools/
-│   └── build_reviewer3_package.py   renders the Reviewer 3 GT-only images
+│   ├── gt_render.py                 shared GT-only renderer
+│   ├── build_reviewer3_package.py   renders the Reviewer 3 GT-only images
+│   └── build_final_adjudication.py  builds the Final Adjudication queue
 └── tests/
     ├── core.test.js      unit tests for review-core.js       (node)
     └── verify_package.py checks the copy against the source  (python3)
@@ -66,6 +72,7 @@ main research repository:
 | Reviewer 1 | 53 | primary review; mixed GT-only and model-output images |
 | Reviewer 2 | 53 | primary review; mixed GT-only and model-output images |
 | Reviewer 3 | 47 | independent verification; **GT-only images, always** |
+| Final Adjudication | 26 | not blind; sees the earlier decisions and, where one exists, the model-assisted view |
 
 Reviewer 3 re-checks a fixed selection of the primary tasks: everything judged
 YES or AMBIGUOUS, plus a deterministic 20% QA sample of the NO tasks (seed
@@ -104,6 +111,62 @@ Ghost task when they share a source image.
 > folder would serve it. That is fine for solo use, but do not point a reviewer
 > at a local server without moving the file out first.
 
+## Final Adjudication
+
+The last pass. It covers the **26 images where the earlier reviews disagreed**
+(21 YES-vs-NO disagreements, 5 defect-type mismatches) and settles what the
+annotation should actually say. It is deliberately *not* a blind review and not a
+majority vote: the earlier decisions are shown, and where a Ghost Audit
+visualisation already exists you can switch to it.
+
+Each screen shows:
+
+- the image with the current GT boxes (the default view),
+- **Show model-assisted view** — only on the 24 images that have an existing
+  visualisation; the other 2 get no toggle at all,
+- the issue and a one-line explanation of it,
+- every previous decision: `Primary Review` (or `Primary Review A` / `B` when the
+  image was reviewed under both conditions) and `Reviewer 3`, each with decision,
+  defect types, classes, count and notes,
+- the final decision form.
+
+Unlike the reviewer flows there is **Previous** as well as **Next**, and any
+answer can be revisited and changed. `AMBIGUOUS` requires a note — the aim is to
+land on YES or NO. There is no timer; review time is not an outcome here.
+
+Progress is saved under `epinu-hga-adjudication-v1`, separate from every reviewer
+key.
+
+### Building the queue
+
+```bash
+python3 tools/build_final_adjudication.py [--force]   # needs openpyxl + Pillow
+```
+
+Reads the `Adjudication Queue` and `Task Details` sheets of the Confirmation
+workbook, renders the 26 GT-only images from the audit originals, and copies the
+existing ghost visualisations for the model-assisted views. **No inference runs
+and no visualisation is regenerated.** The workbook is opened read-only and never
+written back.
+
+`QA Misses` (primary said NO, Reviewer 3 said YES) is a separate list and is not
+part of this queue. One source image legitimately appears in both, via two
+different primary tasks — the queue holds its ghost task, QA Misses holds its
+random task.
+
+### Output
+
+`claim2_final_adjudication_completed.csv`, in queue order:
+
+```
+queue_id,final_defect_found,final_defect_types,final_target_classes,final_number_of_defects,final_adjudication_notes
+```
+
+Merge it back into the workbook on `queue_id`. The site never publishes the
+original file names, so `original_file_name` is not in the exported CSV — join it
+from `data/final_adjudication_mapping_researcher.csv` (git-ignored,
+`queue_id,image_id,original_file_name`) if you need it.
+
 ## Running it locally
 
 The app fetches `tasks.json`, so it needs to be served over HTTP — opening
@@ -118,7 +181,7 @@ python3 -m http.server 8000
 ## Tests
 
 ```bash
-node tests/core.test.js       # validation, CSV escaping, formatting
+node tests/core.test.js       # validation, CSV escaping, formatting (38 tests)
 python3 tests/verify_package.py   # image MD5s, task IDs/order, no researcher-only data
 ```
 
