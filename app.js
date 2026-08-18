@@ -11,6 +11,16 @@
 
   var Core = window.ReviewCore;
 
+  var REVIEWER_IDS = ["reviewer1", "reviewer2", "reviewer3"];
+
+  // Reviewer 3 is an independent verification pass and is shown GT-only images.
+  // Its instructions must not mention model output at all.
+  var INSTRUCTION_BLOCK = {
+    reviewer1: "instr-r12",
+    reviewer2: "instr-r12",
+    reviewer3: "instr-r3",
+  };
+
   var state = {
     reviewerId: null,
     tasks: [],
@@ -42,7 +52,7 @@
       "ambiguous-hint", "btn-next", "pause-overlay", "pause-title",
       "pause-message", "btn-resume", "complete-count", "complete-time",
       "btn-download", "btn-complete-home", "zoom-overlay", "zoom-image",
-      "btn-zoom-close",
+      "btn-zoom-close", "instr-r12", "instr-r3", "instr-select-first",
     ].forEach(function (id) {
       el[id] = $(id);
     });
@@ -58,6 +68,23 @@
       el[view].hidden = view !== name;
     });
     window.scrollTo(0, 0);
+  }
+
+  /** "reviewer1" -> "Reviewer 1" */
+  function displayName(reviewerId) {
+    return reviewerId.replace(/^reviewer/, "Reviewer ");
+  }
+
+  /**
+   * Show only the instruction block for the selected reviewer. Before a reviewer
+   * is chosen, show neither: Reviewer 3 must never see the Reviewer 1/2 section
+   * describing model output.
+   */
+  function applyInstructionVariant() {
+    var wanted = INSTRUCTION_BLOCK[state.reviewerId];
+    el["instr-r12"].hidden = wanted !== "instr-r12";
+    el["instr-r3"].hidden = wanted !== "instr-r3";
+    el["instr-select-first"].hidden = Boolean(wanted);
   }
 
   // -----------------------------------------------------------------------
@@ -298,7 +325,7 @@
         }
         state.index = state.answers.length;
 
-        el["brief-reviewer"].textContent = reviewerId === "reviewer1" ? "Reviewer 1" : "Reviewer 2";
+        el["brief-reviewer"].textContent = displayName(reviewerId);
         el["brief-count"].textContent = String(state.tasks.length);
 
         var done = state.answers.length;
@@ -340,7 +367,7 @@
     var second = window.confirm("Are you sure? This cannot be undone.");
     if (!second) return;
 
-    ["reviewer1", "reviewer2"].forEach(function (reviewerId) {
+    REVIEWER_IDS.forEach(function (reviewerId) {
       window.localStorage.removeItem(Core.storageKey(reviewerId));
     });
     window.alert("Saved progress has been deleted.");
@@ -376,6 +403,7 @@
 
     el["btn-start"].addEventListener("click", startReview);
     el["btn-back-landing"].addEventListener("click", function () {
+      state.reviewerId = null;
       showView("view-landing");
     });
     el["btn-reset"].addEventListener("click", resetProgress);
@@ -420,6 +448,7 @@
         pause("Review paused", "Timing is stopped while you read the instructions.");
       }
       state.previousView = current;
+      applyInstructionVariant();
       showView("view-instructions");
     });
     el["btn-instructions-back"].addEventListener("click", function () {
@@ -430,6 +459,7 @@
       .forEach(function (button) {
         button.addEventListener("click", function () {
           state.previousView = "view-brief";
+          applyInstructionVariant();
           showView("view-instructions");
         });
       });
@@ -471,6 +501,7 @@
     buildCheckboxes(el["defect-types"], Core.DEFECT_TYPES, "defect");
     buildCheckboxes(el["target-classes"], Core.TARGET_CLASSES, "class");
     resetForm();
+    applyInstructionVariant();
     bindEvents();
     showView("view-landing");
   }

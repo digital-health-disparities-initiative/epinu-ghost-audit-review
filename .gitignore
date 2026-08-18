@@ -12,3 +12,7 @@ node_modules/
 
 # Reviewer output — completed CSVs must not be committed
 *_review_completed.csv
+
+# Researcher-only — must never reach the public Pages site
+*_researcher.csv
+data/reviewer3_verification_selection_researcher.csv

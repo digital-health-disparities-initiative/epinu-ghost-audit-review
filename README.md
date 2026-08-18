@@ -47,13 +47,62 @@ main research repository:
 ├── review-core.js        pure logic: validation, CSV building, formatting
 ├── data/
 │   ├── reviewer1/{images/ (53), tasks.json}
-│   └── reviewer2/{images/ (53), tasks.json}
+│   ├── reviewer2/{images/ (53), tasks.json}
+│   ├── reviewer3/{images/ (47), tasks.json}
+│   └── reviewer3_verification_selection_researcher.csv   <- git-ignored
+├── tools/
+│   └── build_reviewer3_package.py   renders the Reviewer 3 GT-only images
 └── tests/
     ├── core.test.js      unit tests for review-core.js       (node)
     └── verify_package.py checks the copy against the source  (python3)
 ```
 
 `tasks.json` contains only `task_id` and the relative image path.
+
+## The three reviewers
+
+| | images | what they see |
+|---|---|---|
+| Reviewer 1 | 53 | primary review; mixed GT-only and model-output images |
+| Reviewer 2 | 53 | primary review; mixed GT-only and model-output images |
+| Reviewer 3 | 47 | independent verification; **GT-only images, always** |
+
+Reviewer 3 re-checks a fixed selection of the primary tasks: everything judged
+YES or AMBIGUOUS, plus a deterministic 20% QA sample of the NO tasks (seed
+`20260813`). Some source images appear in both a Random and a Ghost primary
+task, so the 61 selected primary observations collapse to **47 unique images** —
+Reviewer 3 reviews each source image exactly once.
+
+Reviewer 3 is shown the original image with the current GT boxes and labels and
+nothing else: no model predictions, no FP/FN/TP markers, no experimental
+condition, no Reviewer 1/2 judgement, and no original file name. Their
+instructions are a separate section in the app and never mention the two kinds of
+image that Reviewer 1/2 see.
+
+### Rebuilding the Reviewer 3 images
+
+```bash
+python3 tools/build_reviewer3_package.py [--force]
+```
+
+Renders the 47 GT-only images from the audit originals and the current COCO
+annotations. It uses the fixed selection as-is and never re-selects or re-samples;
+if the selection file is missing it stops rather than regenerating one.
+
+### Researcher-only mapping
+
+`data/reviewer3_verification_selection_researcher.csv` maps each `r3_task_id`
+back to its `original_file_name` and `linked_primary_task_ids` (plus the linked
+reviewers, conditions and primary outcomes). It is **git-ignored**, so it is
+never published to the Pages site, and the app never loads it.
+
+Use it after Reviewer 3 finishes to map each R3 judgement back to all of its
+linked primary tasks — a single R3 answer applies to both the Random and the
+Ghost task when they share a source image.
+
+> Because the file lives under `data/`, a local `python3 -m http.server` in this
+> folder would serve it. That is fine for solo use, but do not point a reviewer
+> at a local server without moving the file out first.
 
 ## Running it locally
 
@@ -78,14 +127,15 @@ if it lives somewhere other than the default.
 
 ## How a review runs
 
-1. The reviewer picks Reviewer 1 or Reviewer 2 (no password).
+1. The reviewer picks Reviewer 1, 2 or 3 (no password).
 2. A brief screen shows the task count, the six target classes and the rules.
 3. **Start Review** shows the first image and starts the timer.
 4. For each image: `NO`, `YES` or `AMBIGUOUS`. `YES` requires at least one
    defect type, at least one affected target class, and a count of 1 or more.
 5. **Next** saves the answer with its elapsed time and moves on. There is no way
    back — this is deliberate, so later images cannot change earlier answers.
-6. After 53 images the completion screen offers **Download CSV**.
+6. After the last image (53, or 47 for Reviewer 3) the completion screen offers
+   **Download CSV**.
 
 Timing details:
 
@@ -102,7 +152,8 @@ the file can be downloaded again.
 
 ## CSV output
 
-Filename: `reviewer1_review_completed.csv` / `reviewer2_review_completed.csv`.
+Filename: `reviewer1_review_completed.csv`, `reviewer2_review_completed.csv` or
+`reviewer3_review_completed.csv`.
 Rows are in task order. UTF-8 with a BOM (so Excel opens it correctly), CRLF line
 endings, RFC 4180 quoting.
 
@@ -110,8 +161,8 @@ Columns — identical to the existing `review.csv`:
 
 | column | values |
 |---|---|
-| `task_id` | `HGA_XXXX` |
-| `reviewer_id` | `reviewer1` / `reviewer2` |
+| `task_id` | `HGA_XXXX` (Reviewer 1/2) or `R3_XXXX` (Reviewer 3) |
+| `reviewer_id` | `reviewer1` / `reviewer2` / `reviewer3` |
 | `defect_found` | `YES` / `NO` / `AMBIGUOUS` |
 | `defect_types` | `;`-separated: `MISSING_LABEL`, `WRONG_CLASS`, `BBOX_ERROR`, `GRANULARITY_MISMATCH`, `SPURIOUS_LABEL`, `OTHER`, `NONE` |
 | `target_classes_affected` | `;`-separated target class names |

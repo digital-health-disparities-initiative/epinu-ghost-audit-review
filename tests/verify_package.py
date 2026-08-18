@@ -24,6 +24,7 @@ DEFAULT_SOURCE = Path(
 )
 REVIEWERS = ["reviewer1", "reviewer2"]
 EXPECTED_TASKS = 53
+R3_EXPECTED_TASKS = 47
 CSV_COLUMNS = [
     "task_id",
     "reviewer_id",
@@ -157,6 +158,105 @@ def main() -> int:
     )
     check("blinding", "tasks.json contains no 'condition' field",
           "condition" not in tasks_text.lower())
+
+    # --- reviewer 3 ---------------------------------------------------------
+    r3_dir = SITE_ROOT / "data" / "reviewer3"
+    selection = SITE_ROOT / "data" / "reviewer3_verification_selection_researcher.csv"
+
+    if not selection.is_file():
+        print(f"ERROR: reviewer 3 selection file not found: {selection}",
+              file=sys.stderr)
+        return 1
+
+    sel_rows = list(csv.DictReader(selection.open(encoding="utf-8")))
+    r3_payload = json.loads((r3_dir / "tasks.json").read_text(encoding="utf-8"))
+    r3_ids = [t["task_id"] for t in r3_payload["tasks"]]
+    r3_files = sorted(p.name for p in (r3_dir / "images").iterdir() if p.is_file())
+    sel_originals = [r["original_file_name"] for r in sel_rows]
+
+    check("reviewer3", f"task count == {R3_EXPECTED_TASKS}",
+          len(r3_ids) == R3_EXPECTED_TASKS, f"got {len(r3_ids)}")
+    check("reviewer3", "task ids match the fixed selection, in order",
+          r3_ids == [r["r3_task_id"] for r in sel_rows])
+    check("reviewer3", "no duplicate task id", len(set(r3_ids)) == len(r3_ids))
+    check("reviewer3", "no duplicate source image (each reviewed once)",
+          len(set(sel_originals)) == len(sel_originals))
+    check("reviewer3", f"images == {R3_EXPECTED_TASKS}",
+          len(r3_files) == R3_EXPECTED_TASKS, f"got {len(r3_files)}")
+    check("reviewer3", "image names match task ids",
+          r3_files == sorted(f"{i}.jpg" for i in r3_ids))
+    check("reviewer3", "tasks.json exposes only task_id and image path",
+          {k for t in r3_payload["tasks"] for k in t} == {"task_id", "image"})
+    check("reviewer3", "reviewer_id is reviewer3",
+          r3_payload["reviewer_id"] == "reviewer3")
+
+    # Reviewer 3 images must be GT-only renders of the audit originals, never a
+    # model visualisation. Matching a Reviewer 1/2 *GT-only* image is expected and
+    # correct -- same renderer, same source -- so the comparison is against the
+    # ghost visualisations specifically.
+    vis_dirs = [
+        Path("/Users/yutokohata/epinu-rfdetr-training/data/human_ghost_audit/model_guided_primary"),
+        Path("/Users/yutokohata/epinu-rfdetr-training/data/vis"),
+    ]
+    vis_hashes = set()
+    for d in vis_dirs:
+        if d.is_dir():
+            vis_hashes |= {md5(p) for p in d.iterdir() if p.is_file()}
+    r3_hashes = {md5(r3_dir / "images" / f) for f in r3_files}
+    check("reviewer3", "no Reviewer 3 image is a model visualisation",
+          not (r3_hashes & vis_hashes),
+          f"{len(r3_hashes & vis_hashes)} match a vis file")
+    check("reviewer3", "every Reviewer 3 image is distinct",
+          len(r3_hashes) == len(r3_files))
+
+    # Positive control: a Reviewer 3 image of a source that also has a GT-only
+    # Reviewer 1/2 image should be byte-identical, proving the same GT renderer.
+    r12_hashes = {md5(p) for r in REVIEWERS
+                  for p in (SITE_ROOT / "data" / r / "images").iterdir() if p.is_file()}
+    check("reviewer3", "GT-only renders reproduce the Reviewer 1/2 GT rendering",
+          bool(r3_hashes & r12_hashes),
+          f"{len(r3_hashes & r12_hashes)} of {len(r3_hashes)} match a GT-only image")
+
+    # --- reviewer 3 privacy -------------------------------------------------
+    check("r3_privacy", "researcher selection CSV is git-ignored",
+          "reviewer3_verification_selection_researcher.csv"
+          in (SITE_ROOT / ".gitignore").read_text(encoding="utf-8"))
+
+    r3_text = (r3_dir / "tasks.json").read_text(encoding="utf-8")
+    check("r3_privacy", "no original file name in reviewer3 tasks.json",
+          not any(o in r3_text for o in sel_originals))
+    for col in ["linked_primary_task_ids", "linked_reviewers", "linked_conditions",
+                "linked_primary_outcomes", "selection_reason"]:
+        values = {r[col] for r in sel_rows if r[col]}
+        check("r3_privacy", f"no {col} value in reviewer3 tasks.json",
+              not any(v in r3_text for v in values))
+    for term in ["random", "ghost", "condition", "model", "fp", "fn",
+                 "outcome", "linked"]:
+        check("r3_privacy", f"reviewer3 tasks.json has no '{term}'",
+              term not in r3_text.lower())
+
+    # The Reviewer 3 instructions block must not mention model output.
+    html = (SITE_ROOT / "index.html").read_text(encoding="utf-8")
+    r3_block = html.split('id="instr-r3"')[1].split("/instr-r3")[0].lower()
+    check("r3_privacy", "reviewer3 instructions never mention random/ghost",
+          "random" not in r3_block and "ghost" not in r3_block)
+    check("r3_privacy", "reviewer3 instructions state it is independent verification",
+          "independent verification" in r3_block)
+    check("r3_privacy", "reviewer3 instructions say such info is intentionally not shown",
+          "intentionally not shown" in r3_block)
+
+    # --- reviewer 1/2 unchanged --------------------------------------------
+    for reviewer in REVIEWERS:
+        payload = json.loads(
+            (SITE_ROOT / "data" / reviewer / "tasks.json").read_text(encoding="utf-8"))
+        check("unchanged", f"{reviewer} still has {EXPECTED_TASKS} tasks",
+              payload["task_count"] == EXPECTED_TASKS, f"got {payload['task_count']}")
+        check("unchanged", f"{reviewer} task ids/order untouched",
+              [t["task_id"] for t in payload["tasks"]]
+              == [r["task_id"] for r in
+                  csv.DictReader((source / reviewer / "review.csv").open(encoding="utf-8"))])
+    check("unchanged", "reviewer3 shares no task id with reviewer 1/2",
+          not (set(r3_ids) & (ids["reviewer1"] | ids["reviewer2"])))
 
     # --- csv schema ---------------------------------------------------------
     core = (SITE_ROOT / "review-core.js").read_text(encoding="utf-8")

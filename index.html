@@ -23,10 +23,11 @@
     <div class="choice-row">
       <button type="button" class="big-button" data-reviewer="reviewer1">Reviewer 1</button>
       <button type="button" class="big-button" data-reviewer="reviewer2">Reviewer 2</button>
+      <button type="button" class="big-button" data-reviewer="reviewer3">Reviewer 3</button>
     </div>
     <p class="footnote">
       Please complete your review independently, and do not discuss individual
-      images with the other reviewer until you have both finished.
+      images with the other reviewers until everyone has finished.
     </p>
     <div class="reset-zone">
       <button type="button" id="btn-reset" class="link-button danger">Reset saved progress</button>
@@ -159,7 +160,7 @@
     <p>
       Work through the images in order and record one answer per image. Please
       review independently and do not discuss individual images with the other
-      reviewer until you have both finished.
+      reviewers until everyone has finished.
     </p>
 
     <h2>Target classes</h2>
@@ -206,6 +207,14 @@
       <dd>A clear annotation problem that does not fit any category above. Please describe it in the notes.</dd>
     </dl>
 
+    <div id="instr-select-first" class="notice" hidden>
+      <p class="small">
+        Select your reviewer ID on the first screen to see the rest of the
+        instructions for your review.
+      </p>
+    </div>
+
+    <div id="instr-r12">
     <h2>Two kinds of image</h2>
     <p>
       The images do not all show the same information. Both kinds are a normal
@@ -237,6 +246,28 @@
       Check the whole image and the annotation for all six target classes — not
       only the places the model pointed at.
     </p>
+    </div><!-- /instr-r12 -->
+
+    <div id="instr-r3" hidden>
+    <h2>This is an independent verification</h2>
+    <p>
+      You are checking the annotation itself, on your own. You are
+      <strong>not</strong> checking anyone else's answers, and you are not being
+      asked to agree or disagree with them.
+    </p>
+    <p>For each image:</p>
+    <ol>
+      <li>Look at the image and the current GT annotation shown on it.</li>
+      <li>Decide whether there is an annotation defect involving one of the six target classes.</li>
+      <li>Do not assume that a model prediction or an earlier reviewer's judgement exists — such information is intentionally not shown to you.</li>
+      <li>Judge only what you can confirm from the image and the GT currently displayed.</li>
+      <li>If you cannot determine the correct annotation with reasonable confidence, choose <strong>AMBIGUOUS</strong>.</li>
+    </ol>
+    <p class="callout">
+      Every image in your set shows the current annotation only. Base your
+      decision on what is in front of you, and nothing else.
+    </p>
+    </div><!-- /instr-r3 -->
 
     <h2>Timing</h2>
     <p>
