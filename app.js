@@ -54,6 +54,8 @@
       "btn-download", "btn-complete-home", "zoom-overlay", "zoom-image",
       "btn-zoom-close", "instr-r12", "instr-r3", "instr-select-first",
       "view-adj-brief", "view-adj", "view-adj-complete",
+      "view-stage-select", "view-stage2-hub", "view-s2-brief", "view-s2-review",
+      "view-s2-phase-a-complete", "view-s2-complete",
     ].forEach(function (id) {
       el[id] = $(id);
     });
@@ -63,10 +65,14 @@
   // Views
   // -----------------------------------------------------------------------
   var VIEWS = [
+    "view-stage-select",
     "view-landing", "view-brief", "view-review", "view-complete",
     "view-instructions",
     // Owned by adjudication.js, listed here so showView() hides them too.
     "view-adj-brief", "view-adj", "view-adj-complete",
+    // Owned by stage2.js, same reason.
+    "view-stage2-hub", "view-s2-brief", "view-s2-review",
+    "view-s2-phase-a-complete", "view-s2-complete",
   ];
 
   function showView(name) {
@@ -458,7 +464,7 @@
       showView("view-instructions");
     });
     el["btn-instructions-back"].addEventListener("click", function () {
-      showView(state.previousView || "view-landing");
+      showView(state.previousView || "view-stage-select");
     });
     Array.prototype.slice
       .call(document.querySelectorAll("[data-goto-instructions]"))
@@ -472,7 +478,7 @@
 
     el["btn-download"].addEventListener("click", downloadCsv);
     el["btn-complete-home"].addEventListener("click", function () {
-      showView("view-landing");
+      showView("view-stage-select");
     });
 
     // Full-size image viewer.
@@ -494,7 +500,8 @@
     // Guard against closing the tab mid-task; the answer in progress is not
     // saved until Next is pressed.
     window.addEventListener("beforeunload", function (event) {
-      if (!el["view-review"].hidden || !el["view-adj"].hidden) {
+      if (!el["view-review"].hidden || !el["view-adj"].hidden
+          || !el["view-s2-review"].hidden) {
         event.preventDefault();
         event.returnValue = "";
       }
@@ -513,7 +520,7 @@
     resetForm();
     applyInstructionVariant();
     bindEvents();
-    showView("view-landing");
+    showView("view-stage-select");
   }
 
   // Shared with adjudication.js, which owns its own views but needs the page's

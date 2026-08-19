@@ -17,8 +17,24 @@
 <main id="main">
 
   <!-- ---------------------------------------------------------------- -->
-  <section id="view-landing" class="view">
-    <h1>Annotation Review</h1>
+  <section id="view-stage-select" class="view">
+    <h1>Human Ghost Audit</h1>
+    <p class="lede">Please select the stage you are working on.</p>
+    <div class="choice-row">
+      <button type="button" class="big-button stage-button" id="btn-stage1">
+        <span class="stage-name">Stage 1</span>
+        <span class="stage-sub">Model Error Review</span>
+      </button>
+      <button type="button" class="big-button stage-button alt" id="btn-stage2">
+        <span class="stage-name">Stage 2</span>
+        <span class="stage-sub">Ghost-Informed Annotation Review</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="view-landing" class="view" hidden>
+    <h1>Stage 1 — Model Error Review</h1>
     <p class="lede">Please select your reviewer ID to begin.</p>
     <div class="choice-row">
       <button type="button" class="big-button" data-reviewer="reviewer1">Reviewer 1</button>
@@ -30,8 +46,160 @@
       Please complete your review independently, and do not discuss individual
       images with the other reviewers until everyone has finished.
     </p>
+    <div class="button-row">
+      <button type="button" id="btn-stage1-back" class="link-button">← Back to stage selection</button>
+    </div>
     <div class="reset-zone">
       <button type="button" id="btn-reset" class="link-button danger">Reset saved progress</button>
+    </div>
+  </section>
+
+  <!-- --------------------------- Stage 2 ---------------------------- -->
+  <section id="view-stage2-hub" class="view" hidden>
+    <h1>Claim 2 — Stage 2</h1>
+    <p class="lede">Ghost-Informed Annotation Review</p>
+    <div class="choice-row">
+      <button type="button" class="big-button" data-s2-reviewer="reviewer1">Reviewer 1</button>
+      <button type="button" class="big-button" data-s2-reviewer="reviewer2">Reviewer 2</button>
+    </div>
+    <p class="footnote">
+      Please complete your review independently, and do not discuss individual
+      images with the other reviewer until everyone has finished.
+    </p>
+    <div class="button-row">
+      <button type="button" id="btn-stage2-back" class="link-button">← Back to stage selection</button>
+    </div>
+  </section>
+
+  <section id="view-s2-brief" class="view" hidden>
+    <h1 id="s2-reviewer-name">Reviewer 1</h1>
+    <p class="lede">Stage 2 — Annotation Review</p>
+
+    <div class="phase-cards">
+      <div class="phase-card" id="s2-card-a">
+        <h2>Phase A</h2>
+        <p class="phase-status" id="s2-phase-a-status">0 / 45 completed</p>
+        <p class="small">45 images</p>
+      </div>
+      <div class="phase-card" id="s2-card-b">
+        <h2>Phase B</h2>
+        <p class="phase-status" id="s2-phase-b-status">Locked</p>
+        <p class="small">45 images</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Before you start</h2>
+      <p id="s2-brief-text">
+        For each image, decide whether the <strong>existing annotation</strong> is
+        correct, and record any annotation problems you find.
+      </p>
+      <p class="small">
+        Your time on each image is measured automatically. Use
+        <strong>Pause</strong> whenever you step away. Once you press
+        <strong>Next</strong>, an image is final — you cannot return to it.
+      </p>
+      <h3>Classes</h3>
+      <ul class="class-list">
+        <li>Tomato_Raw</li>
+        <li>Lemon</li>
+        <li>RedOnion_Raw</li>
+      </ul>
+    </div>
+
+    <div class="button-row">
+      <button type="button" id="btn-s2-start" class="primary-button">Start Phase A</button>
+      <button type="button" id="btn-s2-home" class="link-button">Choose a different reviewer</button>
+    </div>
+  </section>
+
+  <section id="view-s2-review" class="view" hidden>
+    <div class="review-header">
+      <span class="task-counter" id="s2-counter">Task 1 / 45</span>
+      <span class="phase-badge" id="s2-phase-badge">Phase A</span>
+      <span class="spacer"></span>
+      <span class="timer" id="s2-timer">Time: 00:00</span>
+      <button type="button" id="btn-s2-pause" class="secondary-button">Pause</button>
+    </div>
+
+    <div id="s2-focus" class="callout" hidden>
+      <p id="s2-focus-text"></p>
+      <p class="focus-tail">
+        Please still inspect the entire image and record any other annotation
+        problems you find.
+      </p>
+    </div>
+
+    <div class="image-frame">
+      <img id="s2-image" alt="Image under review" />
+    </div>
+    <p class="small image-hint">Click the image to open it at full size.</p>
+
+    <form id="s2-form" novalidate>
+      <fieldset class="question">
+        <legend>Annotation defect found?</legend>
+        <div class="choice-row" role="radiogroup" aria-label="Annotation defect found?">
+          <button type="button" class="choice-button" data-s2-answer="NO">NO</button>
+          <button type="button" class="choice-button" data-s2-answer="YES">YES</button>
+          <button type="button" class="choice-button" data-s2-answer="AMBIGUOUS">AMBIGUOUS</button>
+        </div>
+      </fieldset>
+
+      <div id="s2-yes-fields" hidden>
+        <fieldset>
+          <legend>Defect type <span class="req">(select at least one)</span></legend>
+          <div class="checkbox-grid" id="s2-defect-types"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Affected target class <span class="req">(select at least one)</span></legend>
+          <div class="checkbox-grid" id="s2-target-classes"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Number of defects <span class="req">(total found in this image)</span></legend>
+          <input type="number" id="s2-defect-count" min="1" step="1" value="1" class="number-input">
+        </fieldset>
+      </div>
+
+      <div id="s2-ambiguous-hint" class="notice" hidden>
+        <p class="small">A note is <strong>required</strong> for AMBIGUOUS.</p>
+      </div>
+
+      <fieldset>
+        <legend>Notes <span id="s2-notes-req" class="optional">(optional)</span></legend>
+        <textarea id="s2-notes" rows="3" placeholder="Anything worth explaining."></textarea>
+      </fieldset>
+
+      <p id="s2-validation" class="validation" role="alert" hidden></p>
+
+      <div class="button-row">
+        <button type="submit" id="btn-s2-next" class="primary-button">Next</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="view-s2-phase-a-complete" class="view" hidden>
+    <h1>Phase A Complete</h1>
+    <p class="stat"><strong>45 / 45</strong> completed</p>
+    <p>Phase B is now unlocked. It works exactly the same way.</p>
+    <div class="button-row">
+      <button type="button" id="btn-s2-start-b" class="primary-button">Start Phase B</button>
+    </div>
+  </section>
+
+  <section id="view-s2-complete" class="view" hidden>
+    <h1>Stage 2 Primary Review Complete</h1>
+    <p class="stat">Phase A: <strong id="s2-final-a">45 / 45</strong></p>
+    <p class="stat">Phase B: <strong id="s2-final-b">45 / 45</strong></p>
+    <p class="stat">Total active review time: <strong id="s2-final-time">0 min 00 sec</strong></p>
+    <p>Thank you for completing the review.</p>
+    <div class="button-row">
+      <button type="button" id="btn-s2-download" class="primary-button">Download Review CSV</button>
+    </div>
+    <p class="small">
+      Your answers stay saved in this browser, so the file can be downloaded again.
+    </p>
+    <div class="button-row">
+      <button type="button" id="btn-s2-complete-home" class="link-button">Back to start</button>
     </div>
   </section>
 
@@ -438,6 +606,15 @@
   </div>
 </div>
 
+<!-- Stage 2 pause overlay -->
+<div id="s2-pause-overlay" class="overlay" hidden>
+  <div class="overlay-card">
+    <h2 id="s2-pause-title">Review paused</h2>
+    <p id="s2-pause-message">Timing is stopped. Press Resume when you are ready.</p>
+    <button type="button" id="btn-s2-resume" class="primary-button">Resume</button>
+  </div>
+</div>
+
 <!-- Full-size image viewer -->
 <div id="zoom-overlay" class="overlay zoom" hidden>
   <img id="zoom-image" alt="Image under review, full size">
@@ -447,5 +624,6 @@
 <script src="review-core.js"></script>
 <script src="app.js"></script>
 <script src="adjudication.js"></script>
+<script src="stage2.js"></script>
 </body>
 </html>

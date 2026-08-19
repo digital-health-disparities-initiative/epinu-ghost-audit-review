@@ -50,14 +50,18 @@ main research repository:
 │   ├── reviewer2/{images/ (53), tasks.json}
 │   ├── reviewer3/{images/ (47), tasks.json}
 │   ├── final_adjudication/{images/ (26), images_model/ (24), queue.json}
+│   ├── stage2/reviewerN/{images/ (90), tasks_phase_a.json, tasks_phase_b.json}
 │   ├── reviewer3_verification_selection_researcher.csv    <- git-ignored
 │   ├── final_adjudication_mapping_researcher.csv          <- git-ignored
+│   ├── stage2_assignment_researcher.csv                   <- git-ignored
 │   └── Claim2_..._Final_Confirmation_List.xlsx            <- git-ignored
 ├── adjudication.js       Final Adjudication screen
+├── stage2.js             Stage 2 review screens
 ├── tools/
 │   ├── gt_render.py                 shared GT-only renderer
 │   ├── build_reviewer3_package.py   renders the Reviewer 3 GT-only images
-│   └── build_final_adjudication.py  builds the Final Adjudication queue
+│   ├── build_final_adjudication.py  builds the Final Adjudication queue
+│   └── build_stage2_packages.py     builds the Stage 2 reviewer packages
 └── tests/
     ├── core.test.js      unit tests for review-core.js       (node)
     └── verify_package.py checks the copy against the source  (python3)
@@ -65,7 +69,18 @@ main research repository:
 
 `tasks.json` contains only `task_id` and the relative image path.
 
-## The three reviewers
+## Stages
+
+The site opens on a stage picker.
+
+- **Stage 1 — Model Error Review** — the original Human Ghost Audit: Reviewer 1,
+  Reviewer 2, Reviewer 3 and Final Adjudication. Unchanged.
+- **Stage 2 — Ghost-Informed Annotation Review** — Reviewer 1 and Reviewer 2,
+  described below.
+
+The two stages share no data, no task lists and no localStorage keys.
+
+## Stage 1 — the three reviewers
 
 | | images | what they see |
 |---|---|---|
@@ -166,6 +181,66 @@ Merge it back into the workbook on `queue_id`. The site never publishes the
 original file names, so `original_file_name` is not in the exported CSV — join it
 from `data/final_adjudication_mapping_researcher.csv` (git-ignored,
 `queue_id,image_id,original_file_name`) if you need it.
+
+## Stage 2 — Ghost-Informed Annotation Review
+
+Tests whether the class-level problems found in Stage 1 help when reviewing
+*different* images. The population is `data/claim2/ghost_audit/train` (2,902
+images); the 728 Stage 1 pseudo-test images are a disjoint split and are not used.
+
+180 images across three classes, each with the focus problem Stage 1 flagged:
+
+| class | focus problem | images |
+|---|---|---|
+| Tomato_Raw | MISSING_LABEL | 60 |
+| Lemon | MISSING_LABEL | 60 |
+| RedOnion_Raw | BBOX_ERROR | 60 |
+
+Each class is split 30 GENERAL / 30 GHOST_INFORMED, then spread over two
+reviewers so each gets 15 per class per condition — 45 + 45 = **90 tasks each**.
+
+**Both arms see identical GT-only images, the same form, the same timer and the
+same zoom.** No model predictions appear anywhere in Stage 2. The only difference
+between the conditions is the instruction.
+
+### Two phases
+
+Each reviewer works through Phase A before Phase B unlocks:
+
+- **Phase A — General Review** (45 GENERAL tasks). Standard instruction only.
+  Nothing about the Stage 1 findings, the focus problems or the condition names
+  is shown — and `tasks_phase_b.json` is not even fetched until Phase A is done,
+  so the focus text is not present in the page at all.
+- **Phase B — Ghost-Informed Review** (45 GHOST_INFORMED tasks). Adds the focus
+  information for that image's class, always followed by *"Please still inspect
+  the entire image and record any other annotation problems you find."*
+
+### Building the packages
+
+```bash
+python3 tools/build_stage2_packages.py [--force]   # needs Pillow
+```
+
+Reads the fixed review set (`data/claim2/stage2/stage2_review_manifest.csv` in
+the research repo) and renders the GT-only images. The GENERAL / GHOST_INFORMED
+assignment comes from that manifest and is never recomputed. The reviewer split
+is a deterministic function of seed `20260819`: within each class x condition
+cell, images are ordered by instance count and paired, one of each pair to each
+reviewer, and the most balanced of 500 seeded candidate assignments is kept. That
+leaves the two reviewers' instance loads within ~0.6%.
+
+### Output
+
+`claim2_stage2_reviewer1_completed.csv` / `..._reviewer2_completed.csv`, Phase A
+rows first:
+
+```
+task_id,reviewer_id,class_name,condition,defect_found,defect_types,target_classes_affected,number_of_defects,notes,review_time_seconds
+```
+
+`number_of_defects` is the total number of defects the reviewer found in that
+image. Original file names are not published; join them from
+`data/stage2_assignment_researcher.csv` (git-ignored) on `task_id`.
 
 ## Running it locally
 

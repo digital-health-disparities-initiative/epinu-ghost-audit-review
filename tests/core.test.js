@@ -316,6 +316,86 @@ test("adjudication storage key is separate from the reviewer keys", () => {
   assert.ok(!Core.ADJUDICATION_STORAGE_KEY.startsWith(Core.STORAGE_PREFIX + ":"));
 });
 
+console.log("\n[stage 2]");
+
+test("storage keys are separate from every Stage 1 key", () => {
+  assert.strictEqual(Core.stage2StorageKey("reviewer1"), "claim2_stage2_reviewer1");
+  assert.strictEqual(Core.stage2StorageKey("reviewer2"), "claim2_stage2_reviewer2");
+  ["reviewer1", "reviewer2", "reviewer3"].forEach((r) => {
+    assert.notStrictEqual(Core.stage2StorageKey(r), Core.storageKey(r));
+  });
+  assert.notStrictEqual(Core.stage2StorageKey("reviewer1"), Core.ADJUDICATION_STORAGE_KEY);
+});
+
+test("csv file names match the requested pattern", () => {
+  assert.strictEqual(Core.stage2CsvFileName("reviewer1"),
+    "claim2_stage2_reviewer1_completed.csv");
+  assert.strictEqual(Core.stage2CsvFileName("reviewer2"),
+    "claim2_stage2_reviewer2_completed.csv");
+});
+
+test("csv header is exactly the requested columns", () => {
+  assert.strictEqual(Core.buildStage2Csv([]).split("\r\n")[0],
+    "task_id,reviewer_id,class_name,condition,defect_found,defect_types," +
+    "target_classes_affected,number_of_defects,notes,review_time_seconds");
+});
+
+test("answer carries class and condition", () => {
+  const a = Core.buildStage2Answer({ defectFound: "NO" },
+    { task_id: "S2_0001", class_name: "Lemon" }, "reviewer1", "GENERAL", 30);
+  assert.strictEqual(a.class_name, "Lemon");
+  assert.strictEqual(a.condition, "GENERAL");
+  assert.strictEqual(a.defect_types, "NONE");
+  assert.strictEqual(a.number_of_defects, 0);
+  assert.strictEqual(a.review_time_seconds, 30);
+});
+
+test("YES joins multiple values with semicolons", () => {
+  const a = Core.buildStage2Answer({
+    defectFound: "YES", defectTypes: ["MISSING_LABEL", "BBOX_ERROR"],
+    targetClasses: ["Tomato_Raw"], numberOfDefects: 5, notes: "n",
+  }, { task_id: "S2_0002", class_name: "Tomato_Raw" }, "reviewer2", "GHOST_INFORMED", 61);
+  assert.strictEqual(a.defect_types, "MISSING_LABEL;BBOX_ERROR");
+  assert.strictEqual(a.target_classes_affected, "Tomato_Raw");
+  assert.strictEqual(a.number_of_defects, 5);
+  assert.strictEqual(a.condition, "GHOST_INFORMED");
+});
+
+test("validation: YES needs type, class and count", () => {
+  assert.strictEqual(Core.validateStage2({
+    defectFound: "YES", defectTypes: [], targetClasses: ["Lemon"], numberOfDefects: 1,
+  }).ok, false);
+  assert.strictEqual(Core.validateStage2({
+    defectFound: "YES", defectTypes: ["OTHER"], targetClasses: ["Lemon"], numberOfDefects: 1,
+  }).ok, true);
+});
+
+test("validation: AMBIGUOUS requires notes, NO does not", () => {
+  assert.strictEqual(Core.validateStage2({ defectFound: "AMBIGUOUS", notes: "" }).ok, false);
+  assert.strictEqual(Core.validateStage2({ defectFound: "AMBIGUOUS", notes: "x" }).ok, true);
+  assert.strictEqual(Core.validateStage2({ defectFound: "NO" }).ok, true);
+});
+
+test("csv row order follows the answers array", () => {
+  const rows = ["S2_0003", "S2_0001", "S2_0002"].map((id) =>
+    Core.buildStage2Answer({ defectFound: "NO" }, { task_id: id, class_name: "Lemon" },
+      "reviewer1", "GENERAL", 1));
+  const lines = Core.buildStage2Csv(rows).trim().split("\r\n");
+  assert.deepStrictEqual(lines.slice(1).map((l) => l.split(",")[0]),
+    ["S2_0003", "S2_0001", "S2_0002"]);
+});
+
+test("csv escapes notes with commas, quotes and newlines", () => {
+  const rows = [Core.buildStage2Answer({ defectFound: "AMBIGUOUS", notes: 'a,b "c"\nd' },
+    { task_id: "S2_0001", class_name: "Lemon" }, "reviewer1", "GENERAL", 1)];
+  const parsed = parseCsv(Core.buildStage2Csv(rows));
+  assert.strictEqual(parsed[1][8], 'a,b "c"\nd');
+});
+
+test("csv contains no file name field", () => {
+  assert.ok(!Core.STAGE2_CSV_COLUMNS.includes("file_name"));
+});
+
 // --- minimal RFC4180 parser used only by the round-trip test ---------------
 function parseCsv(text) {
   const rows = [];

@@ -143,16 +143,39 @@ def main() -> int:
     check("blinding", "no original file name appears in any served file",
           not leaked, f"files: {leaked}" if leaked else "")
 
-    # "random" is allowed nowhere as a condition label; check the reviewer-facing
-    # payloads and the page itself for condition vocabulary.
+    # Condition vocabulary must not reach a STAGE 1 reviewer. Scope the scan to the
+    # Stage 1 reviewer-facing payloads and instruction blocks -- Stage 2 uses
+    # "Ghost-Informed" as a visible label by design, so a whole-site scan would
+    # flag it wrongly.
+    stage1_payloads = [
+        SITE_ROOT / "data" / r / "tasks.json" for r in REVIEWERS
+    ] + [SITE_ROOT / "data" / "reviewer3" / "tasks.json",
+         SITE_ROOT / "data" / "final_adjudication" / "queue.json"]
     condition_hits = []
-    for path, text in served_text:
-        lowered = text.lower()
+    for path in stage1_payloads:
+        if not path.is_file():
+            continue
+        lowered = path.read_text(encoding="utf-8").lower()
         for term in FORBIDDEN_TERMS:
             if term in lowered:
                 condition_hits.append(f"{path.relative_to(SITE_ROOT)}:{term}")
-    check("blinding", "no condition vocabulary in any served file",
+    check("blinding", "no condition vocabulary in any Stage 1 reviewer payload",
           not condition_hits, f"hits: {condition_hits}" if condition_hits else "")
+
+    html_text = (SITE_ROOT / "index.html").read_text(encoding="utf-8")
+    for block in ("instr-r12", "instr-r3"):
+        body = html_text.split(f'id="{block}"')[1].split(f"/{block}")[0].lower()
+        check("blinding", f"Stage 1 instruction block {block} names no condition",
+              not any(t in body for t in ("ghost", "random")))
+
+    # Stage 2 must not leak Stage 1 findings into its Phase A payloads.
+    for reviewer in ("reviewer1", "reviewer2"):
+        phase_a = SITE_ROOT / "data" / "stage2" / reviewer / "tasks_phase_a.json"
+        if phase_a.is_file():
+            lowered = phase_a.read_text(encoding="utf-8").lower()
+            check("blinding", f"stage2 {reviewer} Phase A payload is free of focus info",
+                  not any(t in lowered for t in
+                          ("ghost", "focus", "condition", "general", "missing", "bbox")))
 
     tasks_text = "\n".join(
         (SITE_ROOT / "data" / r / "tasks.json").read_text() for r in REVIEWERS

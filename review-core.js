@@ -242,6 +242,75 @@
     return lines.join("\r\n") + "\r\n";
   }
 
+  // -------------------------------------------------------------------------
+  // Stage 2
+  // -------------------------------------------------------------------------
+  var STAGE2_STORAGE_PREFIX = "claim2_stage2_";
+
+  var STAGE2_CSV_COLUMNS = [
+    "task_id",
+    "reviewer_id",
+    "class_name",
+    "condition",
+    "defect_found",
+    "defect_types",
+    "target_classes_affected",
+    "number_of_defects",
+    "notes",
+    "review_time_seconds",
+  ];
+
+  /** Separate namespace from every Stage 1 key. */
+  function stage2StorageKey(reviewerId) {
+    return STAGE2_STORAGE_PREFIX + reviewerId;
+  }
+
+  function stage2CsvFileName(reviewerId) {
+    return STAGE2_STORAGE_PREFIX + reviewerId + "_completed.csv";
+  }
+
+  /** YES needs type + class + count; AMBIGUOUS needs a note; NO needs nothing. */
+  function validateStage2(draft) {
+    return validateAdjudication(draft);
+  }
+
+  function buildStage2Answer(draft, task, reviewerId, condition, reviewTimeSeconds) {
+    var answer = {
+      task_id: task.task_id,
+      reviewer_id: reviewerId,
+      class_name: task.class_name,
+      condition: condition,
+      defect_found: draft.defectFound,
+      defect_types: "",
+      target_classes_affected: "",
+      number_of_defects: "",
+      notes: draft.notes ? String(draft.notes) : "",
+      review_time_seconds: reviewTimeSeconds,
+    };
+    if (draft.defectFound === "NO") {
+      answer.defect_types = "NONE";
+      answer.number_of_defects = 0;
+    } else if (draft.defectFound === "YES") {
+      answer.defect_types = (draft.defectTypes || []).join(LIST_SEPARATOR);
+      answer.target_classes_affected = (draft.targetClasses || []).join(LIST_SEPARATOR);
+      answer.number_of_defects = Number(draft.numberOfDefects);
+    }
+    return answer;
+  }
+
+  /** Phase A rows first, then Phase B, each in task order. */
+  function buildStage2Csv(answers) {
+    var lines = [STAGE2_CSV_COLUMNS.join(",")];
+    (answers || []).forEach(function (answer) {
+      lines.push(
+        STAGE2_CSV_COLUMNS.map(function (column) {
+          return csvEscape(answer[column]);
+        }).join(",")
+      );
+    });
+    return lines.join("\r\n") + "\r\n";
+  }
+
   var api = {
     STORAGE_PREFIX: STORAGE_PREFIX,
     TARGET_CLASSES: TARGET_CLASSES,
@@ -262,6 +331,13 @@
     validateAdjudication: validateAdjudication,
     buildAdjudication: buildAdjudication,
     buildAdjudicationCsv: buildAdjudicationCsv,
+    STAGE2_STORAGE_PREFIX: STAGE2_STORAGE_PREFIX,
+    STAGE2_CSV_COLUMNS: STAGE2_CSV_COLUMNS,
+    stage2StorageKey: stage2StorageKey,
+    stage2CsvFileName: stage2CsvFileName,
+    validateStage2: validateStage2,
+    buildStage2Answer: buildStage2Answer,
+    buildStage2Csv: buildStage2Csv,
   };
 
   if (typeof module !== "undefined" && module.exports) {

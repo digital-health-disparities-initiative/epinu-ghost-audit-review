@@ -1,0 +1,231 @@
+{
+  "reviewer_id": "reviewer1",
+  "task_count": 45,
+  "tasks": [
+    {
+      "task_id": "S2_0002",
+      "image": "images/S2_0002.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0003",
+      "image": "images/S2_0003.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0004",
+      "image": "images/S2_0004.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0014",
+      "image": "images/S2_0014.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0019",
+      "image": "images/S2_0019.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0020",
+      "image": "images/S2_0020.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0025",
+      "image": "images/S2_0025.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0026",
+      "image": "images/S2_0026.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0027",
+      "image": "images/S2_0027.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0032",
+      "image": "images/S2_0032.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0033",
+      "image": "images/S2_0033.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0037",
+      "image": "images/S2_0037.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0045",
+      "image": "images/S2_0045.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0047",
+      "image": "images/S2_0047.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0052",
+      "image": "images/S2_0052.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0057",
+      "image": "images/S2_0057.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0060",
+      "image": "images/S2_0060.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0061",
+      "image": "images/S2_0061.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0066",
+      "image": "images/S2_0066.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0077",
+      "image": "images/S2_0077.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0081",
+      "image": "images/S2_0081.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0083",
+      "image": "images/S2_0083.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0085",
+      "image": "images/S2_0085.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0093",
+      "image": "images/S2_0093.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0096",
+      "image": "images/S2_0096.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0097",
+      "image": "images/S2_0097.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0115",
+      "image": "images/S2_0115.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0119",
+      "image": "images/S2_0119.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0120",
+      "image": "images/S2_0120.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0124",
+      "image": "images/S2_0124.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0125",
+      "image": "images/S2_0125.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0132",
+      "image": "images/S2_0132.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0134",
+      "image": "images/S2_0134.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0141",
+      "image": "images/S2_0141.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0143",
+      "image": "images/S2_0143.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0146",
+      "image": "images/S2_0146.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0150",
+      "image": "images/S2_0150.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0153",
+      "image": "images/S2_0153.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0155",
+      "image": "images/S2_0155.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0156",
+      "image": "images/S2_0156.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0157",
+      "image": "images/S2_0157.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0162",
+      "image": "images/S2_0162.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0167",
+      "image": "images/S2_0167.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0170",
+      "image": "images/S2_0170.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0176",
+      "image": "images/S2_0176.jpg",
+      "class_name": "Tomato_Raw"
+    }
+  ]
+}
