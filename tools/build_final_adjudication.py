@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -37,7 +38,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from gt_render import load_coco, load_font, render_gt_only  # noqa: E402
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
-RESEARCH_ROOT = Path("/Users/yutokohata/epinu-rfdetr-training")
+# Location of the research repository. Override with EPINU_RESEARCH_ROOT;
+# defaults to a sibling checkout so no absolute personal path is hard-coded.
+RESEARCH_ROOT = Path(
+    os.environ.get("EPINU_RESEARCH_ROOT", SITE_ROOT.parent / "epinu-rfdetr-training")
+)
 
 DEFAULT_XLSX = SITE_ROOT / "data" / "Claim2_Human_Ghost_Audit_Final_Confirmation_List.xlsx"
 DEFAULT_AUDIT = RESEARCH_ROOT / "data/claim2/ghost_audit/audit"

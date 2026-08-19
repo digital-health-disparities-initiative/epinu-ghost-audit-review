@@ -13,16 +13,20 @@ from __future__ import annotations
 
 import argparse
 import csv
+from collections import defaultdict
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = Path(
-    "/Users/yutokohata/epinu-rfdetr-training/data/human_ghost_audit/reviewers"
+# Override the research repository location with EPINU_RESEARCH_ROOT.
+RESEARCH_ROOT = Path(
+    os.environ.get("EPINU_RESEARCH_ROOT", SITE_ROOT.parent / "epinu-rfdetr-training")
 )
+DEFAULT_SOURCE = RESEARCH_ROOT / "data/human_ghost_audit/reviewers"
 REVIEWERS = ["reviewer1", "reviewer2"]
 EXPECTED_TASKS = 53
 R3_EXPECTED_TASKS = 47
@@ -219,8 +223,8 @@ def main() -> int:
     # correct -- same renderer, same source -- so the comparison is against the
     # ghost visualisations specifically.
     vis_dirs = [
-        Path("/Users/yutokohata/epinu-rfdetr-training/data/human_ghost_audit/model_guided_primary"),
-        Path("/Users/yutokohata/epinu-rfdetr-training/data/vis"),
+        RESEARCH_ROOT / "data/human_ghost_audit/model_guided_primary",
+        RESEARCH_ROOT / "data/vis",
     ]
     vis_hashes = set()
     for d in vis_dirs:
@@ -313,6 +317,100 @@ def main() -> int:
         check("adjudication", "no workbook is tracked by git",
               not subprocess.run(["git", "ls-files", "*.xlsx"], cwd=SITE_ROOT,
                                  capture_output=True, text=True).stdout.strip())
+
+    # --- stage 2 -------------------------------------------------------------
+    s2_root = SITE_ROOT / "data" / "stage2"
+    if s2_root.is_dir():
+        s2_reviewers = ["reviewer_a", "reviewer_b"]
+        roles_file = SITE_ROOT / "data" / "stage2_class_roles_researcher.json"
+        assign_file = SITE_ROOT / "data" / "stage2_assignment_researcher.csv"
+        rows2 = list(csv.DictReader(assign_file.open(encoding="utf-8"))) \
+            if assign_file.is_file() else []
+
+        check("stage2", "reviewer folders are anonymous",
+              sorted(d.name for d in s2_root.iterdir() if d.is_dir()) == s2_reviewers)
+        for reviewer in s2_reviewers:
+            payload = json.loads(
+                (s2_root / reviewer / "tasks.json").read_text(encoding="utf-8"))
+            tasks = payload["tasks"]
+            imgs = sorted(p.name for p in (s2_root / reviewer / "images").iterdir()
+                          if p.is_file())
+            check("stage2", f"{reviewer}: 90 tasks", len(tasks) == 90, f"got {len(tasks)}")
+            check("stage2", f"{reviewer}: 90 images", len(imgs) == 90, f"got {len(imgs)}")
+            check("stage2", f"{reviewer}: images match task ids",
+                  imgs == sorted(f"{t['task_id']}.jpg" for t in tasks))
+            check("stage2", f"{reviewer}: no condition label in the payload",
+                  not any(c in json.dumps(payload)
+                          for c in ("GENERAL", "GHOST_INFORMED")))
+            check("stage2", f"{reviewer}: task keys are limited",
+                  {k for t in tasks for k in t}
+                  <= {"task_id", "image", "class_name", "focus_information"})
+
+        if rows2:
+            by_rc = defaultdict(set)
+            for r in rows2:
+                by_rc[(r["reviewer_id"], r["class_name"])].add(r["condition"])
+            check("stage2", "no reviewer holds both conditions for a class",
+                  all(len(v) == 1 for v in by_rc.values()),
+                  str({k: v for k, v in by_rc.items() if len(v) > 1}))
+            for reviewer in s2_reviewers:
+                conds = {r["condition"] for r in rows2 if r["reviewer_id"] == reviewer}
+                check("stage2", f"{reviewer} carries both roles across classes",
+                      conds == {"GENERAL", "GHOST_INFORMED"}, str(conds))
+                n = sum(1 for r in rows2 if r["reviewer_id"] == reviewer)
+                check("stage2", f"{reviewer}: 90 assigned", n == 90, f"got {n}")
+            check("stage2", "180 unique source images, unchanged",
+                  len({r["file_name"] for r in rows2}) == 180)
+            for cond in ("GENERAL", "GHOST_INFORMED"):
+                check("stage2", f"{cond} == 90",
+                      sum(1 for r in rows2 if r["condition"] == cond) == 90)
+
+        check("stage2", "researcher role map is git-ignored",
+              not roles_file.is_file() or subprocess.run(
+                  ["git", "check-ignore", "-q", "data/stage2_class_roles_researcher.json"],
+                  cwd=SITE_ROOT, capture_output=True).returncode == 0)
+
+    # --- privacy: no personal names anywhere in the published repo -----------
+    tracked = subprocess.run(["git", "ls-files"], cwd=SITE_ROOT,
+                             capture_output=True, text=True).stdout.split()
+    # The tokens to search for are supplied from outside, so that no personal
+    # name is written into this repository -- including into this test.
+    # e.g. EPINU_NAME_TOKENS="name1,name2" python3 tests/verify_package.py
+    name_tokens = [t.strip().lower()
+                   for t in os.environ.get("EPINU_NAME_TOKENS", "").split(",")
+                   if t.strip()]
+    offenders = []
+    for rel in tracked:
+        path = SITE_ROOT / rel
+        if not path.is_file() or path.suffix in {".jpg", ".jpeg", ".png"}:
+            continue
+        lowered = path.read_text(encoding="utf-8", errors="ignore").lower()
+        for token in name_tokens:
+            if token in lowered:
+                offenders.append(f"{rel}:{token}")
+    check("privacy",
+          "no personal name in any tracked text file"
+          + ("" if name_tokens else " (set EPINU_NAME_TOKENS to check)"),
+          not offenders, str(offenders[:5]))
+    check("privacy", "no tracked path contains a personal name",
+          not [p for p in tracked if any(t in p.lower() for t in name_tokens)])
+    # Structural check that always runs: absolute home paths embed a user name.
+    home_paths = []
+    self_rel = str(Path(__file__).resolve().relative_to(SITE_ROOT))
+    for rel in tracked:
+        path = SITE_ROOT / rel
+        if not path.is_file() or path.suffix in {".jpg", ".jpeg", ".png"}:
+            continue
+        if rel == self_rel:
+            continue  # this file holds the patterns being searched for
+        text_l = path.read_text(encoding="utf-8", errors="ignore")
+        if "/Users/" in text_l or "/home/" in text_l:
+            home_paths.append(rel)
+    check("privacy", "no tracked file embeds an absolute home directory path",
+          not home_paths, str(home_paths[:5]))
+    check("privacy", "Stage 2 reviewer ids are anonymous everywhere",
+          not any("reviewer1" in p or "reviewer2" in p
+                  for p in tracked if p.startswith("data/stage2/")))
 
     # --- csv schema ---------------------------------------------------------
     core = (SITE_ROOT / "review-core.js").read_text(encoding="utf-8")

@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import shutil
 import sys
 from collections import defaultdict
@@ -36,9 +37,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from gt_render import load_coco, load_font, render_gt_only  # noqa: E402
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_AUDIT = Path(
-    "/Users/yutokohata/epinu-rfdetr-training/data/claim2/ghost_audit/audit"
+# Override the research repository location with EPINU_RESEARCH_ROOT.
+RESEARCH_ROOT = Path(
+    os.environ.get("EPINU_RESEARCH_ROOT", SITE_ROOT.parent / "epinu-rfdetr-training")
 )
+DEFAULT_AUDIT = RESEARCH_ROOT / "data/claim2/ghost_audit/audit"
 SELECTION_CSV = SITE_ROOT / "data" / "reviewer3_verification_selection_researcher.csv"
 
 EXPECTED_TASKS = 47

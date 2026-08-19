@@ -55,7 +55,7 @@
       "btn-zoom-close", "instr-r12", "instr-r3", "instr-select-first",
       "view-adj-brief", "view-adj", "view-adj-complete",
       "view-stage-select", "view-stage2-hub", "view-s2-brief", "view-s2-review",
-      "view-s2-phase-a-complete", "view-s2-complete",
+      "view-s2-complete",
     ].forEach(function (id) {
       el[id] = $(id);
     });
@@ -72,7 +72,7 @@
     "view-adj-brief", "view-adj", "view-adj-complete",
     // Owned by stage2.js, same reason.
     "view-stage2-hub", "view-s2-brief", "view-s2-review",
-    "view-s2-phase-a-complete", "view-s2-complete",
+    "view-s2-complete",
   ];
 
   function showView(name) {

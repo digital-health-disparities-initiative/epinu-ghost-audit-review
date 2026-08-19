@@ -1,0 +1,516 @@
+{
+  "reviewer_id": "reviewer_b",
+  "task_count": 90,
+  "tasks": [
+    {
+      "task_id": "S2_0001",
+      "image": "images/S2_0001.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0008",
+      "image": "images/S2_0008.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0010",
+      "image": "images/S2_0010.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0011",
+      "image": "images/S2_0011.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0015",
+      "image": "images/S2_0015.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0018",
+      "image": "images/S2_0018.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0019",
+      "image": "images/S2_0019.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0021",
+      "image": "images/S2_0021.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0023",
+      "image": "images/S2_0023.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0025",
+      "image": "images/S2_0025.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0026",
+      "image": "images/S2_0026.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0028",
+      "image": "images/S2_0028.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0030",
+      "image": "images/S2_0030.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0031",
+      "image": "images/S2_0031.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0032",
+      "image": "images/S2_0032.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0034",
+      "image": "images/S2_0034.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0038",
+      "image": "images/S2_0038.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0039",
+      "image": "images/S2_0039.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0042",
+      "image": "images/S2_0042.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0044",
+      "image": "images/S2_0044.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0045",
+      "image": "images/S2_0045.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0046",
+      "image": "images/S2_0046.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0047",
+      "image": "images/S2_0047.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0049",
+      "image": "images/S2_0049.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0050",
+      "image": "images/S2_0050.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0051",
+      "image": "images/S2_0051.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0052",
+      "image": "images/S2_0052.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0053",
+      "image": "images/S2_0053.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0054",
+      "image": "images/S2_0054.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0056",
+      "image": "images/S2_0056.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0058",
+      "image": "images/S2_0058.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0059",
+      "image": "images/S2_0059.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0061",
+      "image": "images/S2_0061.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0063",
+      "image": "images/S2_0063.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0066",
+      "image": "images/S2_0066.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0067",
+      "image": "images/S2_0067.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0070",
+      "image": "images/S2_0070.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0072",
+      "image": "images/S2_0072.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0073",
+      "image": "images/S2_0073.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0074",
+      "image": "images/S2_0074.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0077",
+      "image": "images/S2_0077.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0078",
+      "image": "images/S2_0078.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0079",
+      "image": "images/S2_0079.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0082",
+      "image": "images/S2_0082.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0084",
+      "image": "images/S2_0084.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0085",
+      "image": "images/S2_0085.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0088",
+      "image": "images/S2_0088.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0090",
+      "image": "images/S2_0090.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0094",
+      "image": "images/S2_0094.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0099",
+      "image": "images/S2_0099.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0100",
+      "image": "images/S2_0100.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0101",
+      "image": "images/S2_0101.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0102",
+      "image": "images/S2_0102.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0103",
+      "image": "images/S2_0103.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0104",
+      "image": "images/S2_0104.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0105",
+      "image": "images/S2_0105.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0106",
+      "image": "images/S2_0106.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0110",
+      "image": "images/S2_0110.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0111",
+      "image": "images/S2_0111.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0113",
+      "image": "images/S2_0113.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0116",
+      "image": "images/S2_0116.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0117",
+      "image": "images/S2_0117.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0118",
+      "image": "images/S2_0118.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0121",
+      "image": "images/S2_0121.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0122",
+      "image": "images/S2_0122.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0127",
+      "image": "images/S2_0127.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0128",
+      "image": "images/S2_0128.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0129",
+      "image": "images/S2_0129.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0130",
+      "image": "images/S2_0130.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0131",
+      "image": "images/S2_0131.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0132",
+      "image": "images/S2_0132.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0135",
+      "image": "images/S2_0135.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0137",
+      "image": "images/S2_0137.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0138",
+      "image": "images/S2_0138.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0141",
+      "image": "images/S2_0141.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0142",
+      "image": "images/S2_0142.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0144",
+      "image": "images/S2_0144.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0145",
+      "image": "images/S2_0145.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0146",
+      "image": "images/S2_0146.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0147",
+      "image": "images/S2_0147.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0149",
+      "image": "images/S2_0149.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0151",
+      "image": "images/S2_0151.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0152",
+      "image": "images/S2_0152.jpg",
+      "class_name": "Tomato_Raw",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Tomato_Raw. Please pay particular attention to visible tomatoes that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0158",
+      "image": "images/S2_0158.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0162",
+      "image": "images/S2_0162.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0164",
+      "image": "images/S2_0164.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0166",
+      "image": "images/S2_0166.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0172",
+      "image": "images/S2_0172.jpg",
+      "class_name": "Lemon"
+    },
+    {
+      "task_id": "S2_0178",
+      "image": "images/S2_0178.jpg",
+      "class_name": "RedOnion_Raw",
+      "focus_information": "Previous Ghost Audit found repeated bounding-box problems in RedOnion_Raw. Please pay particular attention to ground-truth boxes whose size or position may be incorrect."
+    },
+    {
+      "task_id": "S2_0180",
+      "image": "images/S2_0180.jpg",
+      "class_name": "Lemon"
+    }
+  ]
+}

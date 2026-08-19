@@ -1,0 +1,486 @@
+{
+  "reviewer_id": "reviewer_a",
+  "task_count": 90,
+  "tasks": [
+    {
+      "task_id": "S2_0002",
+      "image": "images/S2_0002.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0003",
+      "image": "images/S2_0003.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0004",
+      "image": "images/S2_0004.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0005",
+      "image": "images/S2_0005.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0006",
+      "image": "images/S2_0006.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0007",
+      "image": "images/S2_0007.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0009",
+      "image": "images/S2_0009.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0012",
+      "image": "images/S2_0012.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0013",
+      "image": "images/S2_0013.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0014",
+      "image": "images/S2_0014.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0016",
+      "image": "images/S2_0016.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0017",
+      "image": "images/S2_0017.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0020",
+      "image": "images/S2_0020.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0022",
+      "image": "images/S2_0022.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0024",
+      "image": "images/S2_0024.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0027",
+      "image": "images/S2_0027.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0029",
+      "image": "images/S2_0029.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0033",
+      "image": "images/S2_0033.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0035",
+      "image": "images/S2_0035.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0036",
+      "image": "images/S2_0036.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0037",
+      "image": "images/S2_0037.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0040",
+      "image": "images/S2_0040.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0041",
+      "image": "images/S2_0041.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0043",
+      "image": "images/S2_0043.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0048",
+      "image": "images/S2_0048.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0055",
+      "image": "images/S2_0055.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0057",
+      "image": "images/S2_0057.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0060",
+      "image": "images/S2_0060.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0062",
+      "image": "images/S2_0062.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0064",
+      "image": "images/S2_0064.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0065",
+      "image": "images/S2_0065.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0068",
+      "image": "images/S2_0068.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0069",
+      "image": "images/S2_0069.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0071",
+      "image": "images/S2_0071.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0075",
+      "image": "images/S2_0075.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0076",
+      "image": "images/S2_0076.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0080",
+      "image": "images/S2_0080.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0081",
+      "image": "images/S2_0081.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0083",
+      "image": "images/S2_0083.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0086",
+      "image": "images/S2_0086.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0087",
+      "image": "images/S2_0087.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0089",
+      "image": "images/S2_0089.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0091",
+      "image": "images/S2_0091.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0092",
+      "image": "images/S2_0092.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0093",
+      "image": "images/S2_0093.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0095",
+      "image": "images/S2_0095.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0096",
+      "image": "images/S2_0096.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0097",
+      "image": "images/S2_0097.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0098",
+      "image": "images/S2_0098.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0107",
+      "image": "images/S2_0107.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0108",
+      "image": "images/S2_0108.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0109",
+      "image": "images/S2_0109.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0112",
+      "image": "images/S2_0112.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0114",
+      "image": "images/S2_0114.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0115",
+      "image": "images/S2_0115.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0119",
+      "image": "images/S2_0119.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0120",
+      "image": "images/S2_0120.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0123",
+      "image": "images/S2_0123.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0124",
+      "image": "images/S2_0124.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0125",
+      "image": "images/S2_0125.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0126",
+      "image": "images/S2_0126.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0133",
+      "image": "images/S2_0133.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0134",
+      "image": "images/S2_0134.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0136",
+      "image": "images/S2_0136.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0139",
+      "image": "images/S2_0139.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0140",
+      "image": "images/S2_0140.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0143",
+      "image": "images/S2_0143.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0148",
+      "image": "images/S2_0148.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0150",
+      "image": "images/S2_0150.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0153",
+      "image": "images/S2_0153.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0154",
+      "image": "images/S2_0154.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0155",
+      "image": "images/S2_0155.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0156",
+      "image": "images/S2_0156.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0157",
+      "image": "images/S2_0157.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0159",
+      "image": "images/S2_0159.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0160",
+      "image": "images/S2_0160.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0161",
+      "image": "images/S2_0161.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0163",
+      "image": "images/S2_0163.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0165",
+      "image": "images/S2_0165.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0167",
+      "image": "images/S2_0167.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0168",
+      "image": "images/S2_0168.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0169",
+      "image": "images/S2_0169.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0170",
+      "image": "images/S2_0170.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0171",
+      "image": "images/S2_0171.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0173",
+      "image": "images/S2_0173.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0174",
+      "image": "images/S2_0174.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0175",
+      "image": "images/S2_0175.jpg",
+      "class_name": "RedOnion_Raw"
+    },
+    {
+      "task_id": "S2_0176",
+      "image": "images/S2_0176.jpg",
+      "class_name": "Tomato_Raw"
+    },
+    {
+      "task_id": "S2_0177",
+      "image": "images/S2_0177.jpg",
+      "class_name": "Lemon",
+      "focus_information": "Previous Ghost Audit found repeated missing-label problems in Lemon. Please pay particular attention to visible lemons that may be missing a ground-truth box."
+    },
+    {
+      "task_id": "S2_0179",
+      "image": "images/S2_0179.jpg",
+      "class_name": "Tomato_Raw"
+    }
+  ]
+}

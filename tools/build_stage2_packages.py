@@ -5,18 +5,34 @@ Stage 2 tests whether the class-level problems found in the Stage 1 Ghost Audit
 help when reviewing *different* images. Both arms see the same GT-only images and
 use the same form; the only difference is the instruction.
 
-Splits the fixed 180-image review set across two reviewers and renders the
-GT-only images. The GENERAL / GHOST_INFORMED assignment comes from the manifest
-and is never recomputed.
+Splits the fixed 180-image review set across two anonymous reviewers and renders
+the GT-only images. The GENERAL / GHOST_INFORMED assignment comes from the
+manifest and is never recomputed.
+
+REVIEWER DESIGN
+Each reviewer takes exactly one condition per class, so nobody reviews the same
+class under both conditions -- once someone has seen the Ghost Audit hint for a
+class they cannot go back to being uninformed about it.
+
+  Tomato_Raw    A = GENERAL          B = GHOST_INFORMED
+  Lemon         A = GHOST_INFORMED   B = GENERAL
+  RedOnion_Raw  decided from the seed, then frozen in a manifest
+
+The conditions alternate across classes so each reviewer carries both roles and
+reviewer effects do not all push one way. Within a class, reviewer and condition
+are still confounded -- unavoidable with two reviewers -- and that limitation is
+documented in the README.
+
+Reviewers are identified only as reviewer_a / reviewer_b. No personal name
+appears in any output, path, key or comment.
 
 Output (reviewer-facing, safe to publish)
-  data/stage2/reviewerN/images/S2_XXXX.jpg
-  data/stage2/reviewerN/tasks_phase_a.json   GENERAL  -- task_id, image, class_name
-  data/stage2/reviewerN/tasks_phase_b.json   GHOST_INFORMED -- + focus text
+  data/stage2/reviewer_X/images/S2_XXXX.jpg
+  data/stage2/reviewer_X/tasks.json   task_id, image, class_name, and
+                                      focus_information only where it applies
 
-Phase A and Phase B are separate files on purpose: the Phase A payload contains
-no focus text and no condition string, so nothing about the Stage 1 findings is
-reachable while a reviewer is working through the general arm.
+The payload carries no condition label: a reviewer cannot read off whether they
+are the control arm for a class.
 
 Requires: Pillow.
 """
@@ -27,6 +43,7 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 import random
 import shutil
 import statistics
@@ -36,7 +53,11 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
-RESEARCH_ROOT = Path("/Users/yutokohata/epinu-rfdetr-training")
+# Location of the research repository. Override with EPINU_RESEARCH_ROOT;
+# defaults to a sibling checkout so no absolute personal path is hard-coded.
+RESEARCH_ROOT = Path(
+    os.environ.get("EPINU_RESEARCH_ROOT", SITE_ROOT.parent / "epinu-rfdetr-training")
+)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from gt_render import load_coco, load_font, render_gt_only  # noqa: E402
@@ -46,10 +67,21 @@ DEFAULT_POPULATION = RESEARCH_ROOT / "data/claim2/ghost_audit/train"
 DEFAULT_AUDIT = RESEARCH_ROOT / "data/claim2/ghost_audit/audit"
 DEFAULT_SPLIT = RESEARCH_ROOT / "data/claim2/D_split"
 
-REVIEWERS = ["reviewer1", "reviewer2"]
+REVIEWERS = ["reviewer_a", "reviewer_b"]
 CONDITIONS = ["GENERAL", "GHOST_INFORMED"]
-PER_CELL = 15          # per reviewer, per class, per condition
+PER_CLASS = 30         # per reviewer, per class (one condition only)
 EXPECTED_IMAGES = 180
+
+# Fixed by design; RedOnion_Raw is drawn from the seed and then frozen.
+FIXED_CLASS_ROLES = {
+    "Tomato_Raw": {"GENERAL": "reviewer_a", "GHOST_INFORMED": "reviewer_b"},
+    "Lemon": {"GENERAL": "reviewer_b", "GHOST_INFORMED": "reviewer_a"},
+}
+SEEDED_CLASS = "RedOnion_Raw"
+
+# Researcher-only: which reviewer holds which condition per class. Kept out of
+# the published site so a reviewer cannot look up that they are the control.
+ROLES_PATH_NAME = "stage2_class_roles_researcher.json"
 
 # Shown only in Phase B, only for that image's class.
 FOCUS_TEXT = {
@@ -85,72 +117,41 @@ def coco_names(path: Path) -> set[str]:
         return {i["file_name"] for i in json.load(fh)["images"]}
 
 
-CANDIDATES = 500
+def resolve_class_roles(seed: int, roles_path: Path) -> dict:
+    """class -> {condition: reviewer}. Decided once, then frozen on disk.
 
-
-def _assign_cell(ordered: list[dict], rng: random.Random) -> dict[str, str]:
-    """Pairwise randomisation: consecutive ranks paired, one to each reviewer."""
-    out: dict[str, str] = {}
-    for i in range(0, len(ordered), 2):
-        a, b = ordered[i], ordered[i + 1]
-        if rng.random() < 0.5:
-            a, b = b, a
-        out[a["task_id"]] = "reviewer1"
-        out[b["task_id"]] = "reviewer2"
-    return out
-
-
-def assign(rows: list[dict], seed: int) -> dict[str, str]:
-    """task_id -> reviewer, 15 per class x condition, matched on instance_count.
-
-    Within each class x condition cell the images are ordered by instance count
-    and taken as consecutive pairs, one image of each pair to each reviewer. That
-    matches the two reviewers across the whole distribution, not just the mean,
-    and guarantees the 15/15 cell counts.
-
-    Pairwise flips alone still let the totals drift, because instance counts are
-    heavy-tailed and a run of flips can land the larger image of many pairs on the
-    same reviewer. So we draw CANDIDATES complete assignments from streams derived
-    from the seed and keep the one with the smallest total imbalance. The result
-    is still a pure function of the seed and still reproducible; it is a
-    deterministic choice among equally valid randomisations, and it never looks at
-    anything except the instance counts already in the manifest.
+    Tomato_Raw and Lemon are fixed by the design. RedOnion_Raw is drawn from the
+    seed so the third class does not simply follow one reviewer, and the whole
+    map is then written to a frozen manifest and reused verbatim on later runs.
+    The draw is deterministic, so a fresh checkout without the manifest rebuilds
+    exactly the same map.
     """
-    cells = defaultdict(list)
-    for row in rows:
-        cells[(row["class_name"], row["condition"])].append(row)
-    ordered_cells = {
-        key: sorted(cell, key=lambda r: (int(r["instance_count"]), r["task_id"]))
-        for key, cell in cells.items()
+    if roles_path.is_file():
+        frozen = json.loads(roles_path.read_text(encoding="utf-8"))["roles"]
+        for cls, roles in FIXED_CLASS_ROLES.items():
+            if frozen.get(cls) != roles:
+                die(f"frozen roles for {cls} disagree with the fixed design: "
+                    f"{frozen.get(cls)} vs {roles}")
+        return frozen
+
+    stream = int(hashlib.sha256(f"{seed}:{SEEDED_CLASS}".encode()).hexdigest()[:12], 16)
+    general = REVIEWERS[random.Random(stream).randrange(2)]
+    other = REVIEWERS[1] if general == REVIEWERS[0] else REVIEWERS[0]
+
+    roles = dict(FIXED_CLASS_ROLES)
+    roles[SEEDED_CLASS] = {"GENERAL": general, "GHOST_INFORMED": other}
+    roles_path.write_text(
+        json.dumps({"seed": seed, "frozen": True, "roles": roles}, indent=2) + "\n",
+        encoding="utf-8")
+    return roles
+
+
+def assign(rows: list[dict], roles: dict) -> dict[str, str]:
+    """task_id -> reviewer, straight from the class/condition role map."""
+    return {
+        row["task_id"]: roles[row["class_name"]][row["condition"]]
+        for row in rows
     }
-    count = {r["task_id"]: int(r["instance_count"]) for r in rows}
-
-    def imbalance(candidate: dict[str, str]) -> tuple[int, int]:
-        per_cell = 0
-        per_condition = defaultdict(int)
-        for key, cell in ordered_cells.items():
-            diff = 0
-            for row in cell:
-                n = count[row["task_id"]]
-                sign = 1 if candidate[row["task_id"]] == "reviewer1" else -1
-                diff += sign * n
-                per_condition[key[1]] += sign * n
-            per_cell += abs(diff)
-        # Rank on the per-cell sum first, then on the condition totals.
-        return per_cell, sum(abs(v) for v in per_condition.values())
-
-    best = None
-    best_score = None
-    for k in range(CANDIDATES):
-        candidate: dict[str, str] = {}
-        for key, cell in sorted(ordered_cells.items()):
-            stream = int(hashlib.sha256(
-                f"{seed}:{k}:{key[0]}:{key[1]}".encode()).hexdigest()[:12], 16)
-            candidate.update(_assign_cell(cell, random.Random(stream)))
-        score = imbalance(candidate)
-        if best_score is None or score < best_score:
-            best, best_score = candidate, score
-    return best
 
 
 def stats(values: list[int]) -> dict:
@@ -197,13 +198,13 @@ def main() -> int:
     if len(rows) != EXPECTED_IMAGES:
         die(f"manifest has {len(rows)} rows, expected {EXPECTED_IMAGES}")
 
-    assignment = assign(rows, args.seed)
+    roles_path = SITE_ROOT / "data" / ROLES_PATH_NAME
+    roles = resolve_class_roles(args.seed, roles_path)
+    assignment = assign(rows, roles)
     image_by_name, anns = load_coco(coco_path)
     font = load_font(13)
 
-    per_reviewer: dict[str, dict[str, list[dict]]] = {
-        r: {c: [] for c in CONDITIONS} for r in REVIEWERS
-    }
+    per_reviewer: dict[str, list[dict]] = {r: [] for r in REVIEWERS}
     mapping = []
     unresolved = []
 
@@ -226,7 +227,7 @@ def main() -> int:
                  "class_name": row["class_name"]}
         if row["condition"] == "GHOST_INFORMED":
             entry["focus_information"] = FOCUS_TEXT[row["class_name"]]
-        per_reviewer[reviewer][row["condition"]].append(entry)
+        per_reviewer[reviewer].append(entry)
 
         mapping.append({
             "task_id": task_id, "reviewer_id": reviewer,
@@ -241,13 +242,13 @@ def main() -> int:
             print(f"  {task_id}: {reason}")
 
     for reviewer in REVIEWERS:
-        for cond, fname in (("GENERAL", "tasks_phase_a.json"),
-                            ("GHOST_INFORMED", "tasks_phase_b.json")):
-            tasks = per_reviewer[reviewer][cond]
-            (out_root / reviewer / fname).write_text(
-                json.dumps({"reviewer_id": reviewer, "task_count": len(tasks),
-                            "tasks": tasks}, indent=2) + "\n",
-                encoding="utf-8")
+        # task_id order was already shuffled when the review set was built, so
+        # classes interleave naturally and the run is not blocked by class.
+        tasks = sorted(per_reviewer[reviewer], key=lambda t: t["task_id"])
+        (out_root / reviewer / "tasks.json").write_text(
+            json.dumps({"reviewer_id": reviewer, "task_count": len(tasks),
+                        "tasks": tasks}, indent=2) + "\n",
+            encoding="utf-8")
 
     mapping_path = SITE_ROOT / "data" / "stage2_assignment_researcher.csv"
     with mapping_path.open("w", newline="", encoding="utf-8") as fh:
@@ -261,29 +262,57 @@ def main() -> int:
     task_ids = [m["task_id"] for m in mapping]
     files = [m["file_name"] for m in mapping]
 
-    check("assignment", f"unique source images == {EXPECTED_IMAGES}",
+    # --- the 180-image set must be untouched -------------------------------
+    check("dataset", f"unique source images == {EXPECTED_IMAGES}",
           len(set(files)) == EXPECTED_IMAGES, f"got {len(set(files))}")
-    check("assignment", "no duplicate task_id", len(set(task_ids)) == len(task_ids))
-    check("assignment", "no image assigned to both reviewers",
-          not ({m["file_name"] for m in mapping if m["reviewer_id"] == "reviewer1"} &
-               {m["file_name"] for m in mapping if m["reviewer_id"] == "reviewer2"}))
-    check("assignment", "unresolved images == 0", not unresolved)
+    check("dataset", "task_ids match the manifest exactly",
+          sorted(task_ids) == sorted(r["task_id"] for r in rows))
+    check("dataset", "condition per task is unchanged from the manifest",
+          {m["task_id"]: m["condition"] for m in mapping} ==
+          {r["task_id"]: r["condition"] for r in rows})
+    for cond in CONDITIONS:
+        n = sum(1 for m in mapping if m["condition"] == cond)
+        check("dataset", f"{cond} == 90", n == 90, f"got {n}")
+    for cls in sorted(FOCUS_TEXT):
+        for cond in CONDITIONS:
+            n = sum(1 for m in mapping
+                    if m["class_name"] == cls and m["condition"] == cond)
+            check("dataset", f"{cls} {cond} == 30", n == 30, f"got {n}")
+    check("dataset", "unresolved images == 0", not unresolved)
+
+    # --- reviewer assignment -----------------------------------------------
     for reviewer in REVIEWERS:
         total = sum(1 for m in mapping if m["reviewer_id"] == reviewer)
         check("assignment", f"{reviewer}: 90 tasks", total == 90, f"got {total}")
-        for cond in CONDITIONS:
-            n = sum(1 for m in mapping
-                    if m["reviewer_id"] == reviewer and m["condition"] == cond)
-            check("assignment", f"{reviewer}: {cond} == 45", n == 45, f"got {n}")
         for cls in sorted(FOCUS_TEXT):
-            for cond in CONDITIONS:
-                n = counts[(reviewer, cls, cond)]
-                check("assignment", f"{reviewer}: {cls} x {cond} == {PER_CELL}",
-                      n == PER_CELL, f"got {n}")
+            n = sum(1 for m in mapping
+                    if m["reviewer_id"] == reviewer and m["class_name"] == cls)
+            check("assignment", f"{reviewer}: {cls} == {PER_CLASS}",
+                  n == PER_CLASS, f"got {n}")
 
-    check("assignment", "condition assignment matches the manifest exactly",
-          {m["task_id"]: m["condition"] for m in mapping} ==
-          {r["task_id"]: r["condition"] for r in rows})
+    # the point of the design: one condition per reviewer per class
+    violations = [
+        (rev, cls) for rev in REVIEWERS for cls in FOCUS_TEXT
+        if len({m["condition"] for m in mapping
+                if m["reviewer_id"] == rev and m["class_name"] == cls}) > 1
+    ]
+    check("assignment", "no reviewer sees both conditions for the same class",
+          not violations, str(violations))
+    for reviewer in REVIEWERS:
+        mine = {(m["class_name"], m["condition"]) for m in mapping
+                if m["reviewer_id"] == reviewer}
+        check("assignment", f"{reviewer} has at least one GENERAL class",
+              any(c == "GENERAL" for _, c in mine))
+        check("assignment", f"{reviewer} has at least one GHOST_INFORMED class",
+              any(c == "GHOST_INFORMED" for _, c in mine))
+    check("assignment", "no image assigned to both reviewers",
+          not ({m["file_name"] for m in mapping if m["reviewer_id"] == REVIEWERS[0]} &
+               {m["file_name"] for m in mapping if m["reviewer_id"] == REVIEWERS[1]}))
+    check("assignment", "roles follow the fixed design for Tomato_Raw and Lemon",
+          all(roles[cls] == want for cls, want in FIXED_CLASS_ROLES.items()))
+    check("assignment", f"{SEEDED_CLASS} roles are frozen on disk",
+          roles_path.is_file()
+          and json.loads(roles_path.read_text())["roles"][SEEDED_CLASS] == roles[SEEDED_CLASS])
 
     # overlap with the excluded sets
     selected = set(files)
@@ -305,63 +334,69 @@ def main() -> int:
         check("images", f"{reviewer}: 90 rendered images", len(got) == 90, f"got {len(got)}")
         check("images", f"{reviewer}: image names match task ids", got == want)
 
-    # information control
-    phase_a_text = "\n".join(
-        (out_root / r / "tasks_phase_a.json").read_text(encoding="utf-8") for r in REVIEWERS)
-    phase_b_text = "\n".join(
-        (out_root / r / "tasks_phase_b.json").read_text(encoding="utf-8") for r in REVIEWERS)
-    for term in ["focus", "ghost", "general", "missing-label", "missing_label",
-                 "bbox", "condition", "stage 1", "previous"]:
-        check("info_control", f"Phase A payload contains no '{term}'",
-              term not in phase_a_text.lower())
-    check("info_control", "Phase A exposes only task_id, image and class_name",
-          {k for r in REVIEWERS
-           for t in json.loads((out_root / r / "tasks_phase_a.json").read_text())["tasks"]
-           for k in t} == {"task_id", "image", "class_name"})
-    check("info_control", "Phase B carries the focus text for every task",
-          all(t.get("focus_information") for r in REVIEWERS
-              for t in json.loads((out_root / r / "tasks_phase_b.json").read_text())["tasks"]))
-    check("info_control", "Phase B focus text matches the task's class",
-          all(t["focus_information"] == FOCUS_TEXT[t["class_name"]] for r in REVIEWERS
-              for t in json.loads((out_root / r / "tasks_phase_b.json").read_text())["tasks"]))
-    for text, label in ((phase_a_text, "Phase A"), (phase_b_text, "Phase B")):
-        check("info_control", f"{label} payload carries no original file name",
-              not any(f in text for f in files))
-        for term in ["prediction", "_eval", "fp", "fn", "confidence"]:
-            check("info_control", f"{label} payload contains no '{term}'",
-                  term not in text.lower())
+    # --- information control ------------------------------------------------
+    payloads = {r: json.loads((out_root / r / "tasks.json").read_text(encoding="utf-8"))
+                for r in REVIEWERS}
+    payload_text = "\n".join(
+        (out_root / r / "tasks.json").read_text(encoding="utf-8") for r in REVIEWERS)
 
-    ignored = subprocess.run(
-        ["git", "check-ignore", "-q", "data/stage2_assignment_researcher.csv"],
-        cwd=SITE_ROOT, capture_output=True).returncode == 0
-    check("info_control", "researcher assignment file is git-ignored", ignored)
+    check("info_control", "payload carries no condition label",
+          not any(t in payload_text for t in CONDITIONS))
+    for term in ["condition", "prediction", "confidence", "_eval", " fp", " fn"]:
+        check("info_control", f"payload contains no '{term.strip()}'",
+              term not in payload_text.lower())
+    check("info_control", "payload carries no original file name",
+          not any(f in payload_text for f in files))
 
-    # reproducibility
+    by_task = {m["task_id"]: m for m in mapping}
+    general_tasks = [t for r in REVIEWERS for t in payloads[r]["tasks"]
+                     if by_task[t["task_id"]]["condition"] == "GENERAL"]
+    ghost_tasks = [t for r in REVIEWERS for t in payloads[r]["tasks"]
+                   if by_task[t["task_id"]]["condition"] == "GHOST_INFORMED"]
+    check("info_control", "GENERAL tasks carry no focus information",
+          all("focus_information" not in t for t in general_tasks),
+          f"{sum(1 for t in general_tasks if 'focus_information' in t)} leak")
+    check("info_control", "every GHOST_INFORMED task carries focus information",
+          all(t.get("focus_information") for t in ghost_tasks))
+    check("info_control", "focus text matches the task's class",
+          all(t["focus_information"] == FOCUS_TEXT[t["class_name"]] for t in ghost_tasks))
+    check("info_control", "task keys are limited to the expected fields",
+          {k for r in REVIEWERS for t in payloads[r]["tasks"] for k in t}
+          <= {"task_id", "image", "class_name", "focus_information"})
+
+    # --- privacy ------------------------------------------------------------
+    check("privacy", "reviewer ids are anonymous",
+          set(REVIEWERS) == {"reviewer_a", "reviewer_b"})
+    check("privacy", "no reviewer directory carries a personal name",
+          all(d.name in REVIEWERS for d in out_root.iterdir() if d.is_dir()))
+    for name in (ROLES_PATH_NAME, "stage2_assignment_researcher.csv"):
+        check("privacy", f"{name} is git-ignored",
+              subprocess.run(["git", "check-ignore", "-q", f"data/{name}"],
+                             cwd=SITE_ROOT, capture_output=True).returncode == 0)
+
+    # --- reproducibility ----------------------------------------------------
     check("reproducibility", f"assignment is reproducible from seed={args.seed}",
-          assign(rows, args.seed) == assignment)
+          assign(rows, resolve_class_roles(args.seed, roles_path)) == assignment)
 
     # ------------------------------------------------------------------ report
     print("\n" + "=" * 78)
     print("STAGE 2 REVIEWER PACKAGES")
     print("=" * 78)
+    print(f"{'class':<14}{'GENERAL':<14}{'GHOST_INFORMED':<16}")
+    print("-" * 46)
+    for cls in sorted(FOCUS_TEXT):
+        print(f"{cls:<14}{roles[cls]['GENERAL']:<14}{roles[cls]['GHOST_INFORMED']:<16}")
     for reviewer in REVIEWERS:
         mine = [m for m in mapping if m["reviewer_id"] == reviewer]
         print(f"\n{reviewer}: {len(mine)} tasks")
-        for cond in CONDITIONS:
-            sub = [m for m in mine if m["condition"] == cond]
-            s = stats([int(m["instance_count"]) for m in sub])
-            per_class = Counter(m["class_name"] for m in sub)
-            print(f"  {cond:<15} n={s['n']:>3}  instances={s['total']:>5} "
-                  f"mean={s['mean']:>6.2f} med={s['median']:>5} "
-                  f"[{dict(sorted(per_class.items()))}]")
-    print("\ninstance balance between reviewers:")
-    for cond in CONDITIONS:
-        a = sum(int(m["instance_count"]) for m in mapping
-                if m["reviewer_id"] == "reviewer1" and m["condition"] == cond)
-        b = sum(int(m["instance_count"]) for m in mapping
-                if m["reviewer_id"] == "reviewer2" and m["condition"] == cond)
-        print(f"  {cond:<15} r1={a:>5}  r2={b:>5}  diff={abs(a-b):>4} "
-              f"({100*abs(a-b)/((a+b)/2):.1f}%)")
+        for cls in sorted(FOCUS_TEXT):
+            sub = [m for m in mine if m["class_name"] == cls]
+            cond = sub[0]["condition"] if sub else "-"
+            s_ = stats([int(m["instance_count"]) for m in sub])
+            print(f"  {cls:<14} {cond:<15} n={s_['n']:>3}  instances={s_['total']:>5} "
+                  f"mean={s_['mean']:>6.2f} med={s_['median']:>5}")
+        total = sum(int(m["instance_count"]) for m in mine)
+        print(f"  {'TOTAL':<14} {'':<15} n={len(mine):>3}  instances={total:>5}")
 
     print("\n" + "=" * 78)
     print("VALIDATION")

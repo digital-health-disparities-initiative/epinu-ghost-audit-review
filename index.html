@@ -57,10 +57,10 @@
   <!-- --------------------------- Stage 2 ---------------------------- -->
   <section id="view-stage2-hub" class="view" hidden>
     <h1>Claim 2 — Stage 2</h1>
-    <p class="lede">Ghost-Informed Annotation Review</p>
+    <p class="lede">Annotation Review</p>
     <div class="choice-row">
-      <button type="button" class="big-button" data-s2-reviewer="reviewer1">Reviewer 1</button>
-      <button type="button" class="big-button" data-s2-reviewer="reviewer2">Reviewer 2</button>
+      <button type="button" class="big-button" data-s2-reviewer="reviewer_a">Reviewer A</button>
+      <button type="button" class="big-button" data-s2-reviewer="reviewer_b">Reviewer B</button>
     </div>
     <p class="footnote">
       Please complete your review independently, and do not discuss individual
@@ -74,18 +74,11 @@
   <section id="view-s2-brief" class="view" hidden>
     <h1 id="s2-reviewer-name">Reviewer 1</h1>
     <p class="lede">Stage 2 — Annotation Review</p>
+    <p class="stat"><strong id="s2-count">90</strong> images assigned</p>
 
-    <div class="phase-cards">
-      <div class="phase-card" id="s2-card-a">
-        <h2>Phase A</h2>
-        <p class="phase-status" id="s2-phase-a-status">0 / 45 completed</p>
-        <p class="small">45 images</p>
-      </div>
-      <div class="phase-card" id="s2-card-b">
-        <h2>Phase B</h2>
-        <p class="phase-status" id="s2-phase-b-status">Locked</p>
-        <p class="small">45 images</p>
-      </div>
+    <div id="s2-progress" class="notice" hidden>
+      <p><strong id="s2-progress-text">0 / 90 completed</strong></p>
+      <p class="small">Saved progress was found in this browser.</p>
     </div>
 
     <div class="panel">
@@ -108,15 +101,14 @@
     </div>
 
     <div class="button-row">
-      <button type="button" id="btn-s2-start" class="primary-button">Start Phase A</button>
+      <button type="button" id="btn-s2-start" class="primary-button">Start Review</button>
       <button type="button" id="btn-s2-home" class="link-button">Choose a different reviewer</button>
     </div>
   </section>
 
   <section id="view-s2-review" class="view" hidden>
     <div class="review-header">
-      <span class="task-counter" id="s2-counter">Task 1 / 45</span>
-      <span class="phase-badge" id="s2-phase-badge">Phase A</span>
+      <span class="task-counter" id="s2-counter">Task 1 / 90</span>
       <span class="spacer"></span>
       <span class="timer" id="s2-timer">Time: 00:00</span>
       <button type="button" id="btn-s2-pause" class="secondary-button">Pause</button>
@@ -177,19 +169,9 @@
     </form>
   </section>
 
-  <section id="view-s2-phase-a-complete" class="view" hidden>
-    <h1>Phase A Complete</h1>
-    <p class="stat"><strong>45 / 45</strong> completed</p>
-    <p>Phase B is now unlocked. It works exactly the same way.</p>
-    <div class="button-row">
-      <button type="button" id="btn-s2-start-b" class="primary-button">Start Phase B</button>
-    </div>
-  </section>
-
   <section id="view-s2-complete" class="view" hidden>
-    <h1>Stage 2 Primary Review Complete</h1>
-    <p class="stat">Phase A: <strong id="s2-final-a">45 / 45</strong></p>
-    <p class="stat">Phase B: <strong id="s2-final-b">45 / 45</strong></p>
+    <h1>Stage 2 Review Complete</h1>
+    <p class="stat"><strong id="s2-final-count">90 / 90</strong> completed</p>
     <p class="stat">Total active review time: <strong id="s2-final-time">0 min 00 sec</strong></p>
     <p>Thank you for completing the review.</p>
     <div class="button-row">

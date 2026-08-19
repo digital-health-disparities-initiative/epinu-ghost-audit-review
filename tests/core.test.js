@@ -318,20 +318,20 @@ test("adjudication storage key is separate from the reviewer keys", () => {
 
 console.log("\n[stage 2]");
 
-test("storage keys are separate from every Stage 1 key", () => {
-  assert.strictEqual(Core.stage2StorageKey("reviewer1"), "claim2_stage2_reviewer1");
-  assert.strictEqual(Core.stage2StorageKey("reviewer2"), "claim2_stage2_reviewer2");
+test("storage keys are anonymous and separate from every Stage 1 key", () => {
+  assert.strictEqual(Core.stage2StorageKey("reviewer_a"), "claim2_stage2_reviewer_a");
+  assert.strictEqual(Core.stage2StorageKey("reviewer_b"), "claim2_stage2_reviewer_b");
   ["reviewer1", "reviewer2", "reviewer3"].forEach((r) => {
     assert.notStrictEqual(Core.stage2StorageKey(r), Core.storageKey(r));
   });
   assert.notStrictEqual(Core.stage2StorageKey("reviewer1"), Core.ADJUDICATION_STORAGE_KEY);
 });
 
-test("csv file names match the requested pattern", () => {
-  assert.strictEqual(Core.stage2CsvFileName("reviewer1"),
-    "claim2_stage2_reviewer1_completed.csv");
-  assert.strictEqual(Core.stage2CsvFileName("reviewer2"),
-    "claim2_stage2_reviewer2_completed.csv");
+test("csv file names use the anonymous reviewer ids", () => {
+  assert.strictEqual(Core.stage2CsvFileName("reviewer_a"),
+    "claim2_stage2_reviewer_a_completed.csv");
+  assert.strictEqual(Core.stage2CsvFileName("reviewer_b"),
+    "claim2_stage2_reviewer_b_completed.csv");
 });
 
 test("csv header is exactly the requested columns", () => {
@@ -342,7 +342,7 @@ test("csv header is exactly the requested columns", () => {
 
 test("answer carries class and condition", () => {
   const a = Core.buildStage2Answer({ defectFound: "NO" },
-    { task_id: "S2_0001", class_name: "Lemon" }, "reviewer1", "GENERAL", 30);
+    { task_id: "S2_0001", class_name: "Lemon" }, "reviewer_a", "GENERAL", 30);
   assert.strictEqual(a.class_name, "Lemon");
   assert.strictEqual(a.condition, "GENERAL");
   assert.strictEqual(a.defect_types, "NONE");
@@ -354,7 +354,7 @@ test("YES joins multiple values with semicolons", () => {
   const a = Core.buildStage2Answer({
     defectFound: "YES", defectTypes: ["MISSING_LABEL", "BBOX_ERROR"],
     targetClasses: ["Tomato_Raw"], numberOfDefects: 5, notes: "n",
-  }, { task_id: "S2_0002", class_name: "Tomato_Raw" }, "reviewer2", "GHOST_INFORMED", 61);
+  }, { task_id: "S2_0002", class_name: "Tomato_Raw" }, "reviewer_b", "GHOST_INFORMED", 61);
   assert.strictEqual(a.defect_types, "MISSING_LABEL;BBOX_ERROR");
   assert.strictEqual(a.target_classes_affected, "Tomato_Raw");
   assert.strictEqual(a.number_of_defects, 5);
@@ -379,7 +379,7 @@ test("validation: AMBIGUOUS requires notes, NO does not", () => {
 test("csv row order follows the answers array", () => {
   const rows = ["S2_0003", "S2_0001", "S2_0002"].map((id) =>
     Core.buildStage2Answer({ defectFound: "NO" }, { task_id: id, class_name: "Lemon" },
-      "reviewer1", "GENERAL", 1));
+      "reviewer_a", "GENERAL", 1));
   const lines = Core.buildStage2Csv(rows).trim().split("\r\n");
   assert.deepStrictEqual(lines.slice(1).map((l) => l.split(",")[0]),
     ["S2_0003", "S2_0001", "S2_0002"]);
@@ -387,7 +387,7 @@ test("csv row order follows the answers array", () => {
 
 test("csv escapes notes with commas, quotes and newlines", () => {
   const rows = [Core.buildStage2Answer({ defectFound: "AMBIGUOUS", notes: 'a,b "c"\nd' },
-    { task_id: "S2_0001", class_name: "Lemon" }, "reviewer1", "GENERAL", 1)];
+    { task_id: "S2_0001", class_name: "Lemon" }, "reviewer_a", "GENERAL", 1)];
   const parsed = parseCsv(Core.buildStage2Csv(rows));
   assert.strictEqual(parsed[1][8], 'a,b "c"\nd');
 });

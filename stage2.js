@@ -1,17 +1,17 @@
 /**
- * Stage 2 — Ghost-Informed Annotation Review.
+ * Stage 2 — Annotation Review.
  *
  * Tests whether the class-level problems found in the Stage 1 Ghost Audit help
- * when reviewing different images. Both arms see the same GT-only images, the
- * same form, the same timer and the same zoom; the ONLY difference is the
- * instruction shown in Phase B.
+ * when reviewing different images. Both conditions see the same GT-only images,
+ * the same form, the same timer and the same zoom; the only difference is that
+ * GHOST_INFORMED tasks carry a class-specific focus note.
  *
- *   Phase A  GENERAL         45 tasks, standard instruction
- *   Phase B  GHOST_INFORMED  45 tasks, plus the class's focus information
+ * Each reviewer takes exactly one condition per class, so nobody reviews the
+ * same class both informed and uninformed. The reviewer never sees a condition
+ * label -- the task payload does not contain one, so a reviewer cannot tell that
+ * they are the control arm for a class.
  *
- * Phase B stays locked until all 45 Phase A tasks are done, and its task list is
- * a separate file that is not even fetched until then -- so nothing about the
- * Stage 1 findings is reachable while the general arm is in progress.
+ * Reviewers are anonymous: reviewer_a / reviewer_b only.
  *
  * Entirely separate from Stage 1: own views, own timer, own localStorage keys.
  */
@@ -21,17 +21,12 @@
   var Core = window.ReviewCore;
   var App = window.ReviewApp;
 
-  var PHASE = {
-    A: { key: "A", condition: "GENERAL", file: "tasks_phase_a.json", label: "Phase A" },
-    B: { key: "B", condition: "GHOST_INFORMED", file: "tasks_phase_b.json", label: "Phase B" },
-  };
-  var TASKS_PER_PHASE = 45;
+  var TASK_COUNT = 90;
 
   var state = {
     reviewerId: null,
-    phase: null,
     tasks: [],
-    answers: { A: [], B: [] },
+    answers: [],
     index: 0,
     draft: null,
     activeMs: 0,
@@ -48,15 +43,15 @@
     [
       "btn-stage1", "btn-stage2", "btn-stage1-back", "btn-stage2-back",
       "view-stage2-hub", "view-s2-brief", "view-s2-review",
-      "view-s2-phase-a-complete", "view-s2-complete",
-      "s2-reviewer-name", "s2-phase-a-status", "s2-phase-b-status",
-      "s2-card-a", "s2-card-b", "btn-s2-start", "btn-s2-home",
-      "s2-counter", "s2-phase-badge", "s2-timer", "btn-s2-pause",
+      "view-s2-complete",
+      "s2-reviewer-name", "s2-count", "s2-progress", "s2-progress-text",
+      "btn-s2-start", "btn-s2-home",
+      "s2-counter", "s2-timer", "btn-s2-pause",
       "s2-focus", "s2-focus-text", "s2-image", "s2-form", "s2-yes-fields",
       "s2-defect-types", "s2-target-classes", "s2-defect-count", "s2-notes",
       "s2-notes-req", "s2-ambiguous-hint", "s2-validation", "btn-s2-next",
       "s2-pause-overlay", "s2-pause-title", "s2-pause-message", "btn-s2-resume",
-      "btn-s2-start-b", "s2-final-a", "s2-final-b", "s2-final-time",
+      "s2-final-count", "s2-final-time",
       "btn-s2-download", "btn-s2-complete-home",
     ].forEach(function (id) { el[id] = $(id); });
   }
@@ -65,15 +60,12 @@
   function loadProgress(reviewerId) {
     try {
       var raw = window.localStorage.getItem(Core.stage2StorageKey(reviewerId));
-      if (!raw) return { A: [], B: [] };
+      if (!raw) return [];
       var parsed = JSON.parse(raw);
-      return {
-        A: Array.isArray(parsed.phase_a) ? parsed.phase_a : [],
-        B: Array.isArray(parsed.phase_b) ? parsed.phase_b : [],
-      };
+      return Array.isArray(parsed.answers) ? parsed.answers : [];
     } catch (err) {
       console.warn("Could not read saved Stage 2 progress:", err);
-      return { A: [], B: [] };
+      return [];
     }
   }
 
@@ -83,8 +75,7 @@
         Core.stage2StorageKey(state.reviewerId),
         JSON.stringify({
           reviewer_id: state.reviewerId,
-          phase_a: state.answers.A,
-          phase_b: state.answers.B,
+          answers: state.answers,
           updated_at: new Date().toISOString(),
         })
       );
@@ -98,8 +89,6 @@
       return false;
     }
   }
-
-  function phaseADone() { return state.answers.A.length >= TASKS_PER_PHASE; }
 
   // ------------------------------------------------------------------ timer
   function currentSeconds() {
@@ -224,14 +213,14 @@
     var task = state.tasks[state.index];
     el["s2-counter"].textContent =
       "Task " + (state.index + 1) + " / " + state.tasks.length;
-    el["s2-phase-badge"].textContent = state.phase.label;
     el["s2-image"].src =
       "data/stage2/" + state.reviewerId + "/" + task.image;
     el["s2-image"].alt =
       "Image under review, " + (state.index + 1) + " of " + state.tasks.length;
 
-    // Focus information exists only on Phase B tasks.
-    if (state.phase.key === "B" && task.focus_information) {
+    // Only GHOST_INFORMED tasks carry focus information; the payload has no
+    // condition label, so its presence is the only signal and it is intended.
+    if (task.focus_information) {
       el["s2-focus"].hidden = false;
       el["s2-focus-text"].textContent = task.focus_information;
     } else {
@@ -259,24 +248,23 @@
     }
 
     stopTimer();
+    var task = state.tasks[state.index];
+    // The condition is not in the payload; it is recovered from whether the task
+    // carries focus information, so the CSV keeps it for the analysis.
+    var condition = task.focus_information ? "GHOST_INFORMED" : "GENERAL";
     var answer = Core.buildStage2Answer(
-      draft, state.tasks[state.index], state.reviewerId,
-      state.phase.condition, currentSeconds()
+      draft, task, state.reviewerId, condition, currentSeconds()
     );
-    state.answers[state.phase.key].push(answer);
+    state.answers.push(answer);
     if (!saveProgress()) {
-      state.answers[state.phase.key].pop();
+      state.answers.pop();
       startTimer();
       return;
     }
 
     state.index += 1;
     if (state.index >= state.tasks.length) {
-      if (state.phase.key === "A") {
-        App.showView("view-s2-phase-a-complete");
-      } else {
-        showComplete();
-      }
+      showComplete();
     } else {
       renderTask();
     }
@@ -284,33 +272,26 @@
 
   function showComplete() {
     stopTimer();
-    el["s2-final-a"].textContent = state.answers.A.length + " / " + TASKS_PER_PHASE;
-    el["s2-final-b"].textContent = state.answers.B.length + " / " + TASKS_PER_PHASE;
-    var all = state.answers.A.concat(state.answers.B);
+    el["s2-final-count"].textContent =
+      state.answers.length + " / " + state.tasks.length;
     el["s2-final-time"].textContent =
-      Core.formatTotalTime(Core.totalReviewSeconds(all));
+      Core.formatTotalTime(Core.totalReviewSeconds(state.answers));
     App.showView("view-s2-complete");
   }
 
-  /** Phase B's task list is only fetched once Phase A is finished. */
-  function startPhase(phase) {
-    if (phase.key === "B" && !phaseADone()) {
-      window.alert("Phase B unlocks once all 45 Phase A images are complete.");
-      return;
-    }
-    return fetch("data/stage2/" + state.reviewerId + "/" + phase.file,
+  function startReview() {
+    return fetch("data/stage2/" + state.reviewerId + "/tasks.json",
                  { cache: "no-store" })
       .then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
       })
       .then(function (payload) {
-        state.phase = phase;
+        // Order comes from the package and is used exactly as-is.
         state.tasks = payload.tasks || [];
-        state.index = Math.min(state.answers[phase.key].length, state.tasks.length);
+        state.index = Math.min(state.answers.length, state.tasks.length);
         if (state.index >= state.tasks.length) {
-          if (phase.key === "A") App.showView("view-s2-phase-a-complete");
-          else showComplete();
+          showComplete();
           return;
         }
         App.showView("view-s2-review");
@@ -327,31 +308,24 @@
     state.answers = loadProgress(reviewerId);
 
     el["s2-reviewer-name"].textContent =
-      reviewerId.replace(/^reviewer/, "Reviewer ");
-    el["s2-phase-a-status"].textContent =
-      state.answers.A.length + " / " + TASKS_PER_PHASE + " completed";
+      "Reviewer " + reviewerId.replace(/^reviewer_/, "").toUpperCase();
+    el["s2-count"].textContent = String(TASK_COUNT);
 
-    var locked = !phaseADone();
-    el["s2-card-b"].classList.toggle("locked", locked);
-    el["s2-phase-b-status"].textContent = locked
-      ? "Locked"
-      : state.answers.B.length + " / " + TASKS_PER_PHASE + " completed";
-
-    if (locked) {
+    var done = state.answers.length;
+    if (done > 0) {
+      el["s2-progress"].hidden = false;
+      el["s2-progress-text"].textContent = done + " / " + TASK_COUNT + " completed";
       el["btn-s2-start"].textContent =
-        state.answers.A.length > 0 ? "Resume Phase A" : "Start Phase A";
-    } else if (state.answers.B.length >= TASKS_PER_PHASE) {
-      el["btn-s2-start"].textContent = "View result";
+        done >= TASK_COUNT ? "View result" : "Resume Review";
     } else {
-      el["btn-s2-start"].textContent =
-        state.answers.B.length > 0 ? "Resume Phase B" : "Start Phase B";
+      el["s2-progress"].hidden = true;
+      el["btn-s2-start"].textContent = "Start Review";
     }
     App.showView("view-s2-brief");
   }
 
   function downloadCsv() {
-    var rows = state.answers.A.concat(state.answers.B);
-    var csv = Core.buildStage2Csv(rows);
+    var csv = Core.buildStage2Csv(state.answers);
     var blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
     var url = URL.createObjectURL(blob);
     var link = document.createElement("a");
@@ -390,12 +364,7 @@
     el["btn-s2-home"].addEventListener("click", function () {
       App.showView("view-stage2-hub");
     });
-    el["btn-s2-start"].addEventListener("click", function () {
-      startPhase(phaseADone() ? PHASE.B : PHASE.A);
-    });
-    el["btn-s2-start-b"].addEventListener("click", function () {
-      startPhase(PHASE.B);
-    });
+    el["btn-s2-start"].addEventListener("click", startReview);
 
     Array.prototype.slice
       .call(el["s2-form"].querySelectorAll(".choice-button"))
